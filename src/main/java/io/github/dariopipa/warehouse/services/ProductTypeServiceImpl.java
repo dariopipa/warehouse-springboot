@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
-import io.github.dariopipa.warehouse.mappers.ProductMapper;
+import io.github.dariopipa.warehouse.mappers.ProductTypeMapper;
 import io.github.dariopipa.warehouse.repositories.ProductTypeRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 
@@ -41,7 +41,7 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 		ProductType productType = productTypeRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found"));
 
-		return ProductMapper.toDto(productType);
+		return ProductTypeMapper.toDto(productType);
 	}
 
 
@@ -53,7 +53,7 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Product type name already exists");
 		}
 
-		ProductType entity = ProductMapper.toEntity(dto, USER_ID);
+		ProductType entity = ProductTypeMapper.toEntity(dto, USER_ID);
 		ProductType saved = productTypeRepository.save(entity);
 
 		return saved.getId();

@@ -21,7 +21,7 @@ import io.github.dariopipa.warehouse.services.ProductTypeServiceImpl;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/product-types")
+@RequestMapping("/api/v1/product-types")
 public class ProductTypeController {
 
 	private final ProductTypeServiceImpl productTypeService;
