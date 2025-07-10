@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
@@ -15,15 +16,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@SoftDelete
 public class ProductType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(nullable = false,unique = true)
 	private String name;
-	
+
 	@CreationTimestamp
 	@Column(name = "created_at", nullable=false)
 	private Instant createdAt;
@@ -31,15 +33,16 @@ public class ProductType {
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable=false)
 	private Instant updatedAt;
-	
+
 	@Column(name = "created_by", nullable=false)
 	private Long createdBy;
-	
+
 	@Column(name = "updated_by", nullable=false)
 	private Long updatedBy;
-	
+
 	@OneToMany(mappedBy = "productType")
 	private List<Product> products = new ArrayList<>();
+
 
 	public Long getId() {
 		return id;
@@ -89,7 +92,7 @@ public class ProductType {
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-	
+
 	public List<Product> getProducts() {
 		return products;
 	}
@@ -97,7 +100,6 @@ public class ProductType {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
 
 	public ProductType() {
 	}
