@@ -37,8 +37,8 @@ public class ProductTypeController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductTypeResponseDTO> getProductType(@PathVariable Long id) {
-	    ProductTypeResponseDTO productType = productTypeService.getById(id);
-	    return ResponseEntity.ok(productType);
+		ProductTypeResponseDTO productType = productTypeService.getById(id);
+		return ResponseEntity.ok(productType);
 	}
 
 	@PostMapping("")
@@ -64,7 +64,7 @@ public class ProductTypeController {
 	public ResponseEntity<ProductType> updateProductTypes(
 			@PathVariable Long id,
 			@Valid @RequestBody ProductTypesDTO productType) {
-		
+
 		this.productTypeService.update(id,productType);
 		return ResponseEntity.noContent().build();
 	}

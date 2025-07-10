@@ -28,13 +28,13 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 	public ProductTypeServiceImpl(ProductTypeRepository productTypeRepository) {
 		this.productTypeRepository = productTypeRepository;
 	}
-	
+
 	@Override
 	public List<ProductType> getCollection() {
 		List<ProductType> productTypes = productTypeRepository.findAll();
 		return productTypes;
 	}
-	
+
 	@Override
 	public ProductTypeResponseDTO getById(Long id) {
 
@@ -43,11 +43,11 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 
 		return ProductMapper.toDto(productType);
 	}
-	
+
 
 	@Override
 	public Long save(ProductTypesDTO dto) {
-		
+
 		Boolean exists = productTypeRepository.existsByName(dto.getName());
 		if (exists) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Product type name already exists");
@@ -61,7 +61,7 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 
 	@Override
 	public void update(Long id, ProductTypesDTO productType) {
-		
+
 		ProductType existing = this.productTypeRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type does not exist"));
 
@@ -72,15 +72,15 @@ public class ProductTypeServiceImpl implements  ProductTypeService{
 
 
 		existing.setName(productType.getName());
-	    this.productTypeRepository.save(existing);
+		this.productTypeRepository.save(existing);
 	}
 
 	@Override
 	public void delete(Long id) {
-	    ProductType productType = productTypeRepository.findById(id)
-	        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found"));
+		ProductType productType = productTypeRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found"));
 
-	    productTypeRepository.delete(productType);
+		productTypeRepository.delete(productType);
 	}
 
 }

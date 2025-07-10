@@ -22,10 +22,10 @@ public class ProductType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(nullable = false,unique = true)
 	private String name;
-	
+
 	@CreationTimestamp
 	@Column(name = "created_at", nullable=false)
 	private Instant createdAt;
@@ -33,16 +33,16 @@ public class ProductType {
 	@UpdateTimestamp
 	@Column(name = "updated_at", nullable=false)
 	private Instant updatedAt;
-	
+
 	@Column(name = "created_by", nullable=false)
 	private Long createdBy;
-	
+
 	@Column(name = "updated_by", nullable=false)
 	private Long updatedBy;
-	
+
 	@OneToMany(mappedBy = "productType")
 	private List<Product> products = new ArrayList<>();
-	
+
 
 	public Long getId() {
 		return id;
@@ -92,7 +92,7 @@ public class ProductType {
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-	
+
 	public List<Product> getProducts() {
 		return products;
 	}
