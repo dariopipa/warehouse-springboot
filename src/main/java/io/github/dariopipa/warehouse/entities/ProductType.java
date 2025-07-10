@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@SoftDelete
 public class ProductType {
 
 	@Id
@@ -40,6 +42,7 @@ public class ProductType {
 	
 	@OneToMany(mappedBy = "productType")
 	private List<Product> products = new ArrayList<>();
+	
 
 	public Long getId() {
 		return id;
@@ -97,7 +100,6 @@ public class ProductType {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
 
 	public ProductType() {
 	}
