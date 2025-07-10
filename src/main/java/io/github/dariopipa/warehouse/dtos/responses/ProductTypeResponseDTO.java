@@ -1,6 +1,5 @@
 package io.github.dariopipa.warehouse.dtos.responses;
 
-import java.sql.Date;
 import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
