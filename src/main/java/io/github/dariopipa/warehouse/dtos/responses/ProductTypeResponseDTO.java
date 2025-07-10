@@ -11,23 +11,23 @@ public class ProductTypeResponseDTO {
 
 	@NotBlank(message = "Id is required")
 	private Long id;
-	
+
 	@NotBlank(message = "Name is required")
 	@Size(max = 255, message = "Name must be at most 255 characters")
 	private String name;
 
-    @JsonProperty("created_at")
+	@JsonProperty("created_at")
 	private Instant createdAt;
 
-    @JsonProperty("updated_at")
+	@JsonProperty("updated_at")
 	private Instant updatedAt;
-	
-    @JsonProperty("created_by")
+
+	@JsonProperty("created_by")
 	private Long createdBy;
-	
-    @JsonProperty("updated_by")
+
+	@JsonProperty("updated_by")
 	private Long updatedBy;
-	
+
 	// Getters and setters
 	public Long getId() {
 		return id;
