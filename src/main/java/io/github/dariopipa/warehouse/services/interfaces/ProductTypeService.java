@@ -6,6 +6,7 @@ import io.github.dariopipa.warehouse.entities.ProductType;
 import java.util.List;
 
 public interface ProductTypeService {
+
     Long save(ProductTypesDTO productType);
 
     void update(Long id, ProductTypesDTO productType);
@@ -15,4 +16,6 @@ public interface ProductTypeService {
     List<ProductType> getCollection();
 
     ProductTypeResponseDTO getById(Long id);
+
+    ProductType getProductType(Long id);
 }

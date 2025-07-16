@@ -1,6 +1,7 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
@@ -40,20 +41,32 @@ public class ProductsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductGetOneResponseDTO> getProduct(@PathVariable Long id) {
+	
 	ProductGetOneResponseDTO productGetOneResponseDTO = this.productService.getById(id);
-
 	return ResponseEntity.ok(productGetOneResponseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+	
 	this.productService.delete(id);
 	return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateEntity(@PathVariable Long id, @RequestBody UpdateRequestDTO updateRequestDTO) {
+    public ResponseEntity<Void> updateEntity(@PathVariable Long id,
+	    @Valid @RequestBody UpdateRequestDTO updateRequestDTO) {
+	
 	this.productService.update(id, updateRequestDTO);
 	return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/quantity")
+    public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
+	    @Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+
+	this.productService.updateQuantity(id, updateQuantityRequestDTO);
+	return ResponseEntity.noContent().build();
+    }
+
 }

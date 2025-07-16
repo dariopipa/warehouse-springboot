@@ -37,14 +37,15 @@ public class ProductTypeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductTypeResponseDTO> getProductType(@PathVariable Long id) {
+	
 	ProductTypeResponseDTO productType = this.productTypeService.getById(id);
 	return ResponseEntity.ok(productType);
     }
 
     @PostMapping("")
     public ResponseEntity<Void> createProductTypes(@Valid @RequestBody ProductTypesDTO productType) {
+	
 	Long id = this.productTypeService.save(productType);
-
 	URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 
 	return ResponseEntity.created(location).build();
@@ -52,6 +53,7 @@ public class ProductTypeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id) {
+	
 	this.productTypeService.delete(id);
 	return ResponseEntity.noContent().build();
     }
