@@ -17,5 +17,4 @@ public class ProductTypesDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

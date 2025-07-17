@@ -1,19 +1,17 @@
 package io.github.dariopipa.warehouse.entities;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SoftDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @SoftDelete
@@ -23,26 +21,25 @@ public class ProductType {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false,unique = true)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@CreationTimestamp
-	@Column(name = "created_at", nullable=false)
+	@Column(name = "created_at", nullable = false)
 	private Instant createdAt;
 
 	@UpdateTimestamp
-	@Column(name = "updated_at", nullable=false)
+	@Column(name = "updated_at", nullable = false)
 	private Instant updatedAt;
 
-	@Column(name = "created_by", nullable=false)
+	@Column(name = "created_by", nullable = false)
 	private Long createdBy;
 
-	@Column(name = "updated_by", nullable=false)
+	@Column(name = "updated_by", nullable = false)
 	private Long updatedBy;
 
 	@OneToMany(mappedBy = "productType")
 	private List<Product> products = new ArrayList<>();
-
 
 	public Long getId() {
 		return id;
@@ -76,7 +73,6 @@ public class ProductType {
 		this.updatedAt = updatedAt;
 	}
 
-
 	public Long getCreatedBy() {
 		return createdBy;
 	}
@@ -106,8 +102,7 @@ public class ProductType {
 
 	@Override
 	public String toString() {
-		return "ProductType [id=" + id + ", name=" + name + ", createdAt=" + createdAt + ", createdBy=" + createdBy
-				+ "]";
+		return "ProductType [id=" + id + ", name=" + name + ", createdAt="
+				+ createdAt + ", createdBy=" + createdBy + "]";
 	}
-
 }
