@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<Object> handleEntityConflictException(EntityNotFoundException ex) {
+    public ResponseEntity<Object> handleEntityConflictException(ConflictException ex) {
         ErrorMessage apiError = new ErrorMessage(
                 HttpStatus.CONFLICT.value(),
                 new Date(),                         
