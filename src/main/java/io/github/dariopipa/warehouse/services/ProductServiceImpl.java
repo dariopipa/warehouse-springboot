@@ -6,6 +6,8 @@ import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
+import io.github.dariopipa.warehouse.exceptions.ConflictException;
+import io.github.dariopipa.warehouse.exceptions.EntityNotFoundException;
 import io.github.dariopipa.warehouse.mappers.ProductMapper;
 import io.github.dariopipa.warehouse.repositories.ProductRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
@@ -14,9 +16,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -34,14 +34,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long save(CreateProductDTO dto) {
 
-	Boolean existsByName = this.productRepository.existsByName(dto.getName());
-	if (existsByName) {
-	    throw new ResponseStatusException(HttpStatus.CONFLICT, "Product name already exists");
+	if (this.productRepository.existsByName(dto.getName())) {
+	    throw new ConflictException("Product already exists with that name");
 	}
 
-	Boolean existsBySku = this.productRepository.existsBySku("sku-generator");
-	if (existsBySku) {
-	    throw new ResponseStatusException(HttpStatus.CONFLICT, "SKU already exists");
+	// remove the "sku-generator"
+	if (this.productRepository.existsBySku("SKU-GEN-TO-BE-MADE")) {
+	    throw new ConflictException("Sku already exists");
 	}
 
 	ProductType productType = productTypeService.getProductType(dto.getProductTypeId());
@@ -86,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 
 	getProduct(id);
 
-	// will calculate if it will ADD or REMOVE the quanity based on the Operation.
+	// will calculate if it will ADD or REMOVE the quantity based on the Operation.
 	int delta = updateQuantityRequestDTO.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
 		? updateQuantityRequestDTO.getQuantity()
 		: -updateQuantityRequestDTO.getQuantity();
@@ -98,6 +97,6 @@ public class ProductServiceImpl implements ProductService {
     private Product getProduct(Long id) {
 
 	return this.productRepository.findById(id)
-		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+		.orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
     }
 }

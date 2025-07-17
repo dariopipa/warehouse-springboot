@@ -27,55 +27,59 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Tag(name = "Products")
 public class ProductsController {
 
-    private final ProductService productService;
+	private final ProductService productService;
 
-    public ProductsController(ProductService productService) {
-	this.productService = productService;
-    }
+	public ProductsController(ProductService productService) {
+		this.productService = productService;
+	}
 
-    @PostMapping("")
-    public ResponseEntity<Void> createProduct(@Valid @RequestBody CreateProductDTO requestBody) {
+	@PostMapping("")
+	public ResponseEntity<Void> createProduct(
+			@Valid @RequestBody CreateProductDTO requestBody) {
 
-	Long id = this.productService.save(requestBody);
-	URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+		Long id = this.productService.save(requestBody);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(id).toUri();
 
-	return ResponseEntity.created(location).build();
-    }
+		return ResponseEntity.created(location).build();
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductGetOneResponseDTO> getProduct(@PathVariable Long id) {
+	@GetMapping("/{id}")
+	public ResponseEntity<ProductGetOneResponseDTO> getProduct(
+			@PathVariable Long id) {
 
-	ProductGetOneResponseDTO productGetOneResponseDTO = this.productService.getById(id);
-	return ResponseEntity.ok(productGetOneResponseDTO);
-    }
+		ProductGetOneResponseDTO productGetOneResponseDTO = this.productService
+				.getById(id);
+		return ResponseEntity.ok(productGetOneResponseDTO);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
 
-	this.productService.delete(id);
-	return ResponseEntity.noContent().build();
-    }
+		this.productService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateEntity(@PathVariable Long id,
-	    @Valid @RequestBody UpdateRequestDTO updateRequestDTO) {
+	@PatchMapping("/{id}")
+	public ResponseEntity<Void> updateEntity(@PathVariable Long id,
+			@Valid @RequestBody UpdateRequestDTO updateRequestDTO) {
 
-	this.productService.update(id, updateRequestDTO);
-	return ResponseEntity.noContent().build();
-    }
+		this.productService.update(id, updateRequestDTO);
+		return ResponseEntity.noContent().build();
+	}
 
-    @PatchMapping("/{id}/quantity")
-    public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
-	    @Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+	@PatchMapping("/{id}/quantity")
+	public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
+			@Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO) {
 
-	this.productService.updateQuantity(id, updateQuantityRequestDTO);
-	return ResponseEntity.noContent().build();
-    }
+		this.productService.updateQuantity(id, updateQuantityRequestDTO);
+		return ResponseEntity.noContent().build();
+	}
 
-    @GetMapping("")
-    public List<ProductGetOneResponseDTO> getProductCollection() {
+	@GetMapping("")
+	public List<ProductGetOneResponseDTO> getProductCollection() {
 
-	return this.productService.getCollection();
-    }
+		return this.productService.getCollection();
+	}
 
 }
