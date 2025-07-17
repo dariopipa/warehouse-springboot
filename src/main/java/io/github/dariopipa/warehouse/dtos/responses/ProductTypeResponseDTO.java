@@ -7,71 +7,71 @@ import java.time.Instant;
 
 public class ProductTypeResponseDTO {
 
-    @NotBlank(message = "Id is required")
-    private Long id;
+	@NotBlank(message = "Id is required")
+	private Long id;
 
-    @NotBlank(message = "Name is required")
-    @Size(max = 255, message = "Name must be at most 255 characters")
-    private String name;
+	@NotBlank(message = "Name is required")
+	@Size(max = 255, message = "Name must be at most 255 characters")
+	private String name;
 
-    @JsonProperty("createdAt")
-    private Instant createdAt;
+	@JsonProperty("createdAt")
+	private Instant createdAt;
 
-    @JsonProperty("updatedAt")
-    private Instant updatedAt;
+	@JsonProperty("updatedAt")
+	private Instant updatedAt;
 
-    @JsonProperty("createdBy")
-    private Long createdBy;
+	@JsonProperty("createdBy")
+	private Long createdBy;
 
-    @JsonProperty("updatedBy")
-    private Long updatedBy;
+	@JsonProperty("updatedBy")
+	private Long updatedBy;
 
-    // Getters and setters
-    public Long getId() {
-	return id;
-    }
+	// Getters and setters
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-	this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getName() {
-	return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-	this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Instant getCreatedAt() {
-	return createdAt;
-    }
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
 
-    public void setCreatedAt(Instant createdAt) {
-	this.createdAt = createdAt;
-    }
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public Instant getUpdatedAt() {
-	return updatedAt;
-    }
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
 
-    public void setUpdatedAt(Instant updatedAt) {
-	this.updatedAt = updatedAt;
-    }
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-    public Long getCreatedBy() {
-	return createdBy;
-    }
+	public Long getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setCreatedBy(Long createdBy) {
-	this.createdBy = createdBy;
-    }
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public Long getUpdatedBy() {
-	return updatedBy;
-    }
+	public Long getUpdatedBy() {
+		return updatedBy;
+	}
 
-    public void setUpdatedBy(Long updatedBy) {
-	this.updatedBy = updatedBy;
-    }
+	public void setUpdatedBy(Long updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 }

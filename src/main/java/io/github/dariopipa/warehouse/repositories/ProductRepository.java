@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    
-    @Modifying
-    @Query("UPDATE Product p SET p.quantity = p.quantity + :delta WHERE p.id = :id")
-    void updateQuantityById(@Param("id") Long id, @Param("delta") int delta);
 
-    boolean existsByName(String name);
+	@Modifying
+	@Query("UPDATE Product p SET p.quantity = p.quantity + :delta WHERE p.id = :id")
+	void updateQuantityById(@Param("id") Long id, @Param("delta") int delta);
 
-    boolean existsBySku(String sku);
+	boolean existsByName(String name);
+
+	boolean existsBySku(String sku);
 }

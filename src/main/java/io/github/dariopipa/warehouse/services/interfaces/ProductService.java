@@ -8,15 +8,16 @@ import java.util.List;
 
 public interface ProductService {
 
-    Long save(CreateProductDTO product);
+	Long save(CreateProductDTO product);
 
-    void update(Long id, UpdateRequestDTO product);
+	void update(Long id, UpdateRequestDTO product);
 
-    void delete(Long id);
+	void delete(Long id);
 
-    List<ProductGetOneResponseDTO> getCollection();
+	List<ProductGetOneResponseDTO> getCollection();
 
-    ProductGetOneResponseDTO getById(Long id);
+	ProductGetOneResponseDTO getById(Long id);
 
-    void updateQuantity(Long id, UpdateQuantityRequestDTO updateQuantityRequestDTO);
+	void updateQuantity(Long id,
+			UpdateQuantityRequestDTO updateQuantityRequestDTO);
 }

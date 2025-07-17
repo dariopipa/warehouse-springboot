@@ -5,174 +5,174 @@ import java.util.UUID;
 
 public class ProductGetOneResponseDTO {
 
-    private Long id;
-    private UUID uuid;
-    private String sku;
-    private String name;
-    private String description;
-    private Integer quantity;
-    private Integer lowStockThreshold;
-    private Double weight;
-    private Double height;
-    private Double length;
-    private Instant createdAt;
-    private Instant updatedAt;
-    private Long createdBy;
-    private Long updatedBy;
-
-    private ProductTypeDTO productType;
-
-    public static class ProductTypeDTO {
 	private Long id;
+	private UUID uuid;
+	private String sku;
 	private String name;
+	private String description;
+	private Integer quantity;
+	private Integer lowStockThreshold;
+	private Double weight;
+	private Double height;
+	private Double length;
+	private Instant createdAt;
+	private Instant updatedAt;
+	private Long createdBy;
+	private Long updatedBy;
 
-	public ProductTypeDTO() {
+	private ProductTypeDTO productType;
+
+	public static class ProductTypeDTO {
+		private Long id;
+		private String name;
+
+		public ProductTypeDTO() {
+		}
+
+		public ProductTypeDTO(Long id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 
-	public ProductTypeDTO(Long id, String name) {
-	    this.id = id;
-	    this.name = name;
+	public ProductGetOneResponseDTO() {
 	}
+
+	// All Getters and Setters
 
 	public Long getId() {
-	    return id;
+		return id;
 	}
 
 	public void setId(Long id) {
-	    this.id = id;
+		this.id = id;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 
 	public String getName() {
-	    return name;
+		return name;
 	}
 
 	public void setName(String name) {
-	    this.name = name;
+		this.name = name;
 	}
-    }
 
-    public ProductGetOneResponseDTO() {
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    // All Getters and Setters
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public Long getId() {
-	return id;
-    }
+	public Integer getQuantity() {
+		return quantity;
+	}
 
-    public void setId(Long id) {
-	this.id = id;
-    }
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
 
-    public UUID getUuid() {
-	return uuid;
-    }
+	public Integer getLowStockThreshold() {
+		return lowStockThreshold;
+	}
 
-    public void setUuid(UUID uuid) {
-	this.uuid = uuid;
-    }
+	public void setLowStockThreshold(Integer lowStockThreshold) {
+		this.lowStockThreshold = lowStockThreshold;
+	}
 
-    public String getSku() {
-	return sku;
-    }
+	public Double getWeight() {
+		return weight;
+	}
 
-    public void setSku(String sku) {
-	this.sku = sku;
-    }
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
 
-    public String getName() {
-	return name;
-    }
+	public Double getHeight() {
+		return height;
+	}
 
-    public void setName(String name) {
-	this.name = name;
-    }
+	public void setHeight(Double height) {
+		this.height = height;
+	}
 
-    public String getDescription() {
-	return description;
-    }
+	public Double getLength() {
+		return length;
+	}
 
-    public void setDescription(String description) {
-	this.description = description;
-    }
+	public void setLength(Double length) {
+		this.length = length;
+	}
 
-    public Integer getQuantity() {
-	return quantity;
-    }
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
 
-    public void setQuantity(Integer quantity) {
-	this.quantity = quantity;
-    }
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public Integer getLowStockThreshold() {
-	return lowStockThreshold;
-    }
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
 
-    public void setLowStockThreshold(Integer lowStockThreshold) {
-	this.lowStockThreshold = lowStockThreshold;
-    }
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-    public Double getWeight() {
-	return weight;
-    }
+	public Long getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setWeight(Double weight) {
-	this.weight = weight;
-    }
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public Double getHeight() {
-	return height;
-    }
+	public Long getUpdatedBy() {
+		return updatedBy;
+	}
 
-    public void setHeight(Double height) {
-	this.height = height;
-    }
+	public void setUpdatedBy(Long updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
-    public Double getLength() {
-	return length;
-    }
+	public ProductTypeDTO getProductType() {
+		return productType;
+	}
 
-    public void setLength(Double length) {
-	this.length = length;
-    }
-
-    public Instant getCreatedAt() {
-	return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-	this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-	return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-	this.updatedAt = updatedAt;
-    }
-
-    public Long getCreatedBy() {
-	return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-	this.createdBy = createdBy;
-    }
-
-    public Long getUpdatedBy() {
-	return updatedBy;
-    }
-
-    public void setUpdatedBy(Long updatedBy) {
-	this.updatedBy = updatedBy;
-    }
-
-    public ProductTypeDTO getProductType() {
-	return productType;
-    }
-
-    public void setProductType(ProductTypeDTO productType) {
-	this.productType = productType;
-    }
+	public void setProductType(ProductTypeDTO productType) {
+		this.productType = productType;
+	}
 }

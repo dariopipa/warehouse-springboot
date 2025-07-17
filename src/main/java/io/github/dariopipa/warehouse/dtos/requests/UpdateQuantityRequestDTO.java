@@ -5,31 +5,31 @@ import jakarta.validation.constraints.NotNull;
 
 public class UpdateQuantityRequestDTO {
 
-    @NotNull(message = "Operation must not be null")
-    private Operation operation;
+	@NotNull(message = "Operation must not be null")
+	private Operation operation;
 
-    @NotNull(message = "Quantity must not be null")
-    @Min(value = 1, message = "Quantity must be greater than or equal to 1")
-    private Integer quantity;
+	@NotNull(message = "Quantity must not be null")
+	@Min(value = 1, message = "Quantity must be greater than or equal to 1")
+	private Integer quantity;
 
-    public enum Operation {
-	INCREASE, DECREASE
-    }
+	public enum Operation {
+		INCREASE, DECREASE
+	}
 
-    public Operation getOperation() {
-	return operation;
-    }
+	public Operation getOperation() {
+		return operation;
+	}
 
-    public void setOperation(Operation operation) {
-	this.operation = operation;
-    }
+	public void setOperation(Operation operation) {
+		this.operation = operation;
+	}
 
-    public Integer getQuantity() {
-	return quantity;
-    }
+	public Integer getQuantity() {
+		return quantity;
+	}
 
-    public void setQuantity(Integer quantity) {
-	this.quantity = quantity;
-    }
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
 
 }

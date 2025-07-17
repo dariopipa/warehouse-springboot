@@ -21,82 +21,92 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final Long id = 1L;
+	private final Long id = 1L;
 
-    private final ProductRepository productRepository;
-    private final ProductTypeService productTypeService;
+	private final ProductRepository productRepository;
+	private final ProductTypeService productTypeService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductTypeService productTypeService) {
-	this.productRepository = productRepository;
-	this.productTypeService = productTypeService;
-    }
-
-    @Override
-    public Long save(CreateProductDTO dto) {
-
-	if (this.productRepository.existsByName(dto.getName())) {
-	    throw new ConflictException("Product already exists with that name");
+	public ProductServiceImpl(ProductRepository productRepository,
+			ProductTypeService productTypeService) {
+		this.productRepository = productRepository;
+		this.productTypeService = productTypeService;
 	}
 
-	// remove the "sku-generator"
-	if (this.productRepository.existsBySku("SKU-GEN-TO-BE-MADE")) {
-	    throw new ConflictException("Sku already exists");
+	@Override
+	public Long save(CreateProductDTO dto) {
+
+		if (this.productRepository.existsByName(dto.getName())) {
+			throw new ConflictException(
+					"Product already exists with that name");
+		}
+
+		// remove the "sku-generator"
+		if (this.productRepository.existsBySku("SKU-GEN-TO-BE-MADE")) {
+			throw new ConflictException("Sku already exists");
+		}
+
+		ProductType productType = productTypeService
+				.getProductType(dto.getProductTypeId());
+		Product productEntity = ProductMapper.toEntity(dto, id, productType);
+		Product savedEntity = this.productRepository.save(productEntity);
+
+		return savedEntity.getId();
 	}
 
-	ProductType productType = productTypeService.getProductType(dto.getProductTypeId());
-	Product productEntity = ProductMapper.toEntity(dto, id, productType);
-	Product savedEntity = this.productRepository.save(productEntity);
+	@Override
+	public void update(Long id, UpdateRequestDTO updateRequestDTO) {
 
-	return savedEntity.getId();
-    }
+		Product product = getProduct(id);
+		ProductType productType = productTypeService
+				.getProductType(updateRequestDTO.getProductTypeId());
 
-    @Override
-    public void update(Long id, UpdateRequestDTO updateRequestDTO) {
+		this.productRepository.save(ProductMapper
+				.updateEntityFromDto(updateRequestDTO, product, productType));
+	}
 
-	Product product = getProduct(id);
-	ProductType productType = productTypeService.getProductType(updateRequestDTO.getProductTypeId());
+	@Override
+	public void delete(Long id) {
 
-	this.productRepository.save(ProductMapper.updateEntityFromDto(updateRequestDTO, product, productType));
-    }
+		Product product = getProduct(id);
+		this.productRepository.delete(product);
+	}
 
-    @Override
-    public void delete(Long id) {
+	@Override
+	public List<ProductGetOneResponseDTO> getCollection() {
 
-	Product product = getProduct(id);
-	this.productRepository.delete(product);
-    }
+		return this.productRepository.findAll().stream()
+				.map(ProductMapper::toDto).toList();
+	}
 
-    @Override
-    public List<ProductGetOneResponseDTO> getCollection() {
+	@Override
+	public ProductGetOneResponseDTO getById(final Long id) {
 
-	return this.productRepository.findAll().stream().map(ProductMapper::toDto).toList();
-    }
+		Product product = getProduct(id);
+		return ProductMapper.toDto(product);
+	}
 
-    @Override
-    public ProductGetOneResponseDTO getById(final Long id) {
+	@Override
+	@Transactional
+	public void updateQuantity(Long id,
+			UpdateQuantityRequestDTO updateQuantityRequestDTO) {
 
-	Product product = getProduct(id);
-	return ProductMapper.toDto(product);
-    }
+		getProduct(id);
 
-    @Override
-    @Transactional
-    public void updateQuantity(Long id, UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+		// will calculate if it will ADD or REMOVE the quantity based on the
+		// Operation.
+		int delta = updateQuantityRequestDTO
+				.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
+						? updateQuantityRequestDTO.getQuantity()
+						: -updateQuantityRequestDTO.getQuantity();
 
-	getProduct(id);
+		this.productRepository.updateQuantityById(id, delta);
 
-	// will calculate if it will ADD or REMOVE the quantity based on the Operation.
-	int delta = updateQuantityRequestDTO.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
-		? updateQuantityRequestDTO.getQuantity()
-		: -updateQuantityRequestDTO.getQuantity();
+	}
 
-	this.productRepository.updateQuantityById(id, delta);
+	private Product getProduct(Long id) {
 
-    }
-
-    private Product getProduct(Long id) {
-
-	return this.productRepository.findById(id)
-		.orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
-    }
+		return this.productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(
+						"Product not found with id: " + id));
+	}
 }

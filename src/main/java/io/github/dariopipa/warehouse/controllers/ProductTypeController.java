@@ -24,45 +24,49 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Tag(name = "Products Type")
 public class ProductTypeController {
 
-    private final ProductTypeService productTypeService;
+	private final ProductTypeService productTypeService;
 
-    public ProductTypeController(ProductTypeService productTypeService) {
-	this.productTypeService = productTypeService;
-    }
+	public ProductTypeController(ProductTypeService productTypeService) {
+		this.productTypeService = productTypeService;
+	}
 
-    @GetMapping("")
-    public List<ProductTypeResponseDTO> getProductTypes() {
-	return this.productTypeService.getCollection();
-    }
+	@GetMapping("")
+	public List<ProductTypeResponseDTO> getProductTypes() {
+		return this.productTypeService.getCollection();
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductTypeResponseDTO> getProductType(@PathVariable Long id) {
+	@GetMapping("/{id}")
+	public ResponseEntity<ProductTypeResponseDTO> getProductType(
+			@PathVariable Long id) {
 
-	ProductTypeResponseDTO productType = this.productTypeService.getById(id);
-	return ResponseEntity.ok(productType);
-    }
+		ProductTypeResponseDTO productType = this.productTypeService
+				.getById(id);
+		return ResponseEntity.ok(productType);
+	}
 
-    @PostMapping("")
-    public ResponseEntity<Void> createProductTypes(@Valid @RequestBody ProductTypesDTO productType) {
+	@PostMapping("")
+	public ResponseEntity<Void> createProductTypes(
+			@Valid @RequestBody ProductTypesDTO productType) {
 
-	Long id = this.productTypeService.save(productType);
-	URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+		Long id = this.productTypeService.save(productType);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(id).toUri();
 
-	return ResponseEntity.created(location).build();
-    }
+		return ResponseEntity.created(location).build();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id) {
 
-	this.productTypeService.delete(id);
-	return ResponseEntity.noContent().build();
-    }
+		this.productTypeService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProductType> updateProductTypes(@PathVariable Long id,
-	    @Valid @RequestBody ProductTypesDTO productType) {
+	@PatchMapping("/{id}")
+	public ResponseEntity<ProductType> updateProductTypes(@PathVariable Long id,
+			@Valid @RequestBody ProductTypesDTO productType) {
 
-	this.productTypeService.update(id, productType);
-	return ResponseEntity.noContent().build();
-    }
+		this.productTypeService.update(id, productType);
+		return ResponseEntity.noContent().build();
+	}
 }

@@ -10,66 +10,69 @@ import java.util.UUID;
 
 public class ProductMapper {
 
-    public static Product toEntity(CreateProductDTO dto, Long userId, ProductType productType) {
-	Product product = new Product();
-	product.setUuid(UUID.randomUUID());
+	public static Product toEntity(CreateProductDTO dto, Long userId,
+			ProductType productType) {
+		Product product = new Product();
+		product.setUuid(UUID.randomUUID());
 
-	product.setSku("SKU-GEN-TO-BE-MADE");
-	product.setName(dto.getName());
-	product.setDescription(dto.getDescription());
-	product.setQuantity(dto.getQuantity());
-	product.setLowStockThreshold(dto.getLowStockThreshold());
+		product.setSku("SKU-GEN-TO-BE-MADE");
+		product.setName(dto.getName());
+		product.setDescription(dto.getDescription());
+		product.setQuantity(dto.getQuantity());
+		product.setLowStockThreshold(dto.getLowStockThreshold());
 
-	product.setWeight(dto.getWeight());
-	product.setHeight(dto.getHeight());
-	product.setLength(dto.getLength());
+		product.setWeight(dto.getWeight());
+		product.setHeight(dto.getHeight());
+		product.setLength(dto.getLength());
 
-	product.setProductType(productType);
-	product.setCreatedBy(userId);
-	product.setUpdatedBy(userId);
+		product.setProductType(productType);
+		product.setCreatedBy(userId);
+		product.setUpdatedBy(userId);
 
-	return product;
-    }
+		return product;
+	}
 
-    public static ProductGetOneResponseDTO toDto(Product productEntity) {
-	ProductGetOneResponseDTO dto = new ProductGetOneResponseDTO();
+	public static ProductGetOneResponseDTO toDto(Product productEntity) {
+		ProductGetOneResponseDTO dto = new ProductGetOneResponseDTO();
 
-	dto.setId(productEntity.getId());
-	dto.setUuid(productEntity.getUuid());
-	dto.setName(productEntity.getName());
-	dto.setSku(productEntity.getSku());
-	dto.setDescription(productEntity.getDescription());
-	dto.setQuantity(productEntity.getQuantity());
-	dto.setLowStockThreshold(productEntity.getLowStockThreshold());
-	dto.setWeight(productEntity.getWeight());
-	dto.setHeight(productEntity.getHeight());
-	dto.setLength(productEntity.getLength());
-	dto.setCreatedAt(productEntity.getCreatedAt());
-	dto.setCreatedBy(productEntity.getCreatedBy());
-	dto.setUpdatedAt(productEntity.getUpdatedAt());
-	dto.setUpdatedBy(productEntity.getUpdatedBy());
-	dto.setProductType(new ProductGetOneResponseDTO.ProductTypeDTO(productEntity.getProductType().getId(),
-		productEntity.getProductType().getName()));
+		dto.setId(productEntity.getId());
+		dto.setUuid(productEntity.getUuid());
+		dto.setName(productEntity.getName());
+		dto.setSku(productEntity.getSku());
+		dto.setDescription(productEntity.getDescription());
+		dto.setQuantity(productEntity.getQuantity());
+		dto.setLowStockThreshold(productEntity.getLowStockThreshold());
+		dto.setWeight(productEntity.getWeight());
+		dto.setHeight(productEntity.getHeight());
+		dto.setLength(productEntity.getLength());
+		dto.setCreatedAt(productEntity.getCreatedAt());
+		dto.setCreatedBy(productEntity.getCreatedBy());
+		dto.setUpdatedAt(productEntity.getUpdatedAt());
+		dto.setUpdatedBy(productEntity.getUpdatedBy());
+		dto.setProductType(new ProductGetOneResponseDTO.ProductTypeDTO(
+				productEntity.getProductType().getId(),
+				productEntity.getProductType().getName()));
 
-	return dto;
-    }
+		return dto;
+	}
 
-    public static Product updateEntityFromDto(UpdateRequestDTO dto, Product existingProduct, ProductType productType) {
-	    // Keep immutable fields
-	    existingProduct.setUuid(existingProduct.getUuid());
-	    existingProduct.setSku(existingProduct.getSku());
+	public static Product updateEntityFromDto(UpdateRequestDTO dto,
+			Product existingProduct, ProductType productType) {
+		// Keep immutable fields
+		existingProduct.setUuid(existingProduct.getUuid());
+		existingProduct.setSku(existingProduct.getSku());
 
-	    // Update mutable fields
-	    existingProduct.setName(dto.getName());
-	    existingProduct.setDescription(dto.getDescription());
-	    existingProduct.setQuantity(dto.getQuantity());
-	    existingProduct.setLowStockThreshold(dto.getLowStockThreshold());
-	    existingProduct.setWeight(dto.getWeight());
-	    existingProduct.setHeight(dto.getHeight());
-	    existingProduct.setLength(dto.getLength());
-	    existingProduct.setProductType(productType);
+		// Update mutable fields
+		existingProduct.setName(dto.getName());
+		existingProduct.setDescription(dto.getDescription());
+		existingProduct.setQuantity(dto.getQuantity());
+		existingProduct.setLowStockThreshold(dto.getLowStockThreshold());
+		existingProduct.setWeight(dto.getWeight());
+		existingProduct.setHeight(dto.getHeight());
+		existingProduct.setLength(dto.getLength());
+		existingProduct.setProductType(productType);
 
-	    return existingProduct;
+		return existingProduct;
 	}
 
 }
