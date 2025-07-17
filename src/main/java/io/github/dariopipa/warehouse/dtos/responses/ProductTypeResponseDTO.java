@@ -14,16 +14,16 @@ public class ProductTypeResponseDTO {
     @Size(max = 255, message = "Name must be at most 255 characters")
     private String name;
 
-    @JsonProperty("created_at")
+    @JsonProperty("createdAt")
     private Instant createdAt;
 
-    @JsonProperty("updated_at")
+    @JsonProperty("updatedAt")
     private Instant updatedAt;
 
-    @JsonProperty("created_by")
+    @JsonProperty("createdBy")
     private Long createdBy;
 
-    @JsonProperty("updated_by")
+    @JsonProperty("updatedBy")
     private Long updatedBy;
 
     // Getters and setters

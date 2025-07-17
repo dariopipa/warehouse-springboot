@@ -13,7 +13,7 @@ public interface ProductTypeService {
 
     void delete(Long id);
 
-    List<ProductType> getCollection();
+    List<ProductTypeResponseDTO> getCollection();
 
     ProductTypeResponseDTO getById(Long id);
 

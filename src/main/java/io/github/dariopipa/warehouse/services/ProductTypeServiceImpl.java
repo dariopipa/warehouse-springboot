@@ -27,10 +27,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     }
 
     @Override
-    public List<ProductType> getCollection() {
-	
-	List<ProductType> productTypes = productTypeRepository.findAll();
-	return productTypes;
+    public List<ProductTypeResponseDTO> getCollection() {
+
+	return productTypeRepository.findAll().stream().map(ProductTypeMapper::toDto).toList();
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
     @Override
     public void delete(Long id) {
-	
+
 	ProductType productType = getProductType(id);
 	this.productTypeRepository.delete(productType);
     }

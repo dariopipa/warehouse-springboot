@@ -68,9 +68,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getCollection() {
-	// TODO Auto-generated method stub
-	return null;
+    public List<ProductGetOneResponseDTO> getCollection() {
+
+	return this.productRepository.findAll().stream().map(ProductMapper::toDto).toList();
     }
 
     @Override
@@ -86,17 +86,18 @@ public class ProductServiceImpl implements ProductService {
 
 	getProduct(id);
 
+	// will calculate if it will ADD or REMOVE the quanity based on the Operation.
 	int delta = updateQuantityRequestDTO.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
 		? updateQuantityRequestDTO.getQuantity()
 		: -updateQuantityRequestDTO.getQuantity();
 
-	productRepository.updateQuantityById(id, delta);
+	this.productRepository.updateQuantityById(id, delta);
 
     }
 
     private Product getProduct(Long id) {
 
-	return productRepository.findById(id)
+	return this.productRepository.findById(id)
 		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
     }
 }
