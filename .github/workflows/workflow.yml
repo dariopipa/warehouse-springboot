@@ -25,8 +25,9 @@ jobs:
         env:
           INTENTIONAL_SECRET_LEAK: ${{ secrets.INTENTIONAL_SECRET_LEAK }}
         run: |
-          echo "COURSE environment variable: $COURSE"
+          echo "COURSE environment variable: ${{ vars.COURSE }}"
           echo "INTENTIONAL_SECRET_LEAK: $INTENTIONAL_SECRET_LEAK"
+		  echo "TEST environment variable: ${{ vars.TEST }}""
 
       - name: Verify Java Version
         run: java -version
