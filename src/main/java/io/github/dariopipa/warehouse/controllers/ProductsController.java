@@ -1,7 +1,6 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,6 @@ import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
-import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,11 +1,11 @@
 package io.github.dariopipa.warehouse.services.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface ProductTypeService {
 
