@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface ProductTypeService {
 
-    Long save(ProductTypesDTO productType);
+	Long save(ProductTypesDTO productType);
 
-    void update(Long id, ProductTypesDTO productType);
+	void update(Long id, ProductTypesDTO productType);
 
-    void delete(Long id);
+	void delete(Long id);
 
-    List<ProductTypeResponseDTO> getCollection();
+	List<ProductTypeResponseDTO> getCollection();
 
-    ProductTypeResponseDTO getById(Long id);
+	ProductTypeResponseDTO getById(Long id);
 
-    ProductType getProductType(Long id);
+	ProductType getProductType(Long id);
 }
