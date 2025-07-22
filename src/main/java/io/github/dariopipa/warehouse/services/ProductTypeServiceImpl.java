@@ -1,5 +1,11 @@
 package io.github.dariopipa.warehouse.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
@@ -8,10 +14,6 @@ import io.github.dariopipa.warehouse.exceptions.EntityNotFoundException;
 import io.github.dariopipa.warehouse.mappers.ProductTypeMapper;
 import io.github.dariopipa.warehouse.repositories.ProductTypeRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductTypeServiceImpl implements ProductTypeService {
@@ -28,10 +30,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 	}
 
 	@Override
-	public List<ProductTypeResponseDTO> getCollection() {
-
-		return productTypeRepository.findAll().stream()
-				.map(ProductTypeMapper::toDto).toList();
+	public Page<ProductTypeResponseDTO> getCollection(Pageable pageable) {
+		return productTypeRepository.findAll(pageable)
+				.map(ProductTypeMapper::toDto);
 	}
 
 	@Override

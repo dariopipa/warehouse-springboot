@@ -1,10 +1,11 @@
 package io.github.dariopipa.warehouse.services.interfaces;
 
+import java.util.List;
+
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
-import java.util.List;
 
 public interface ProductService {
 
