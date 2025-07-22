@@ -1,11 +1,12 @@
 name: Spring Boot CI
-run-name: ${{ github.actor }} triggered Spring Boot CI 🚀
+run-name: ${{ github.actor }} triggered Spring Boot CI
 
 on: [push]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    environment: WareHouse
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -19,6 +20,14 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      - name: Printing environment variables and "leaking secrets".
+        env:
+          COURSE: ${{ secrets.COURSE }}
+          INTENTIONAL_SECRET_LEAK: ${{ secrets.INTENTIONAL_SECRET_LEAK }}
+        run: |
+          echo "COURSE environment variable: $COURSE"
+          echo "INTENTIONAL_SECRET_LEAK: $INTENTIONAL_SECRET_LEAK"
 
       - name: Verify Java Version
         run: java -version
