@@ -77,9 +77,10 @@ public class ProductsController {
 	}
 
 	@GetMapping("")
-	public List<ProductGetOneResponseDTO> getProductCollection() {
+	public ResponseEntity<List<ProductGetOneResponseDTO>> getProductCollection() {
 
-		return this.productService.getCollection();
+		List<ProductGetOneResponseDTO> collectionGetOneResponseDTOs = productService.getCollection(); 
+		return ResponseEntity.ok(collectionGetOneResponseDTOs);
 	}
 
 }

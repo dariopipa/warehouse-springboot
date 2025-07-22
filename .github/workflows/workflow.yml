@@ -1,0 +1,27 @@
+name: Spring Boot CI
+run-name: ${{ github.actor }} triggered Spring Boot CI 🚀
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Verify Java Version
+        run: java -version
+
+      - name: Run Spring Boot Application
+        run: mvn spring-boot:run
