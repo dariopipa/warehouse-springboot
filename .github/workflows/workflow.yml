@@ -23,7 +23,6 @@ jobs:
 
       - name: Printing environment variables and "leaking secrets".
         env:
-          COURSE: ${{ secrets.COURSE }}
           INTENTIONAL_SECRET_LEAK: ${{ secrets.INTENTIONAL_SECRET_LEAK }}
         run: |
           echo "COURSE environment variable: $COURSE"
