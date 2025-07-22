@@ -21,7 +21,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Printing environment variables and "leaking secrets".
+      - name: Printing environment variables and "leaking secrets"
         env:
           INTENTIONAL_SECRET_LEAK: ${{ secrets.INTENTIONAL_SECRET_LEAK }}
 		  COURSE: ${{ vars.COURSE }}
