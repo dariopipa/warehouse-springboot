@@ -24,5 +24,6 @@ jobs:
       - name: Verify Java Version
         run: java -version
 
+
       - name: Run Spring Boot Application
         run: mvn spring-boot:run
