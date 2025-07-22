@@ -21,16 +21,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Printing environment variables and "leaking secrets"
-        env:
-          INTENTIONAL_SECRET_LEAK: ${{ secrets.INTENTIONAL_SECRET_LEAK }}
-          COURSE: ${{ vars.COURSE }}
-          TEST: ${{ vars.TEST }}
-        run: |
-          echo "COURSE environment variable: $COURSE"
-          echo "INTENTIONAL_SECRET_LEAK: $INTENTIONAL_SECRET_LEAK"
-          echo "TEST environment variable: $TEST"
-
       - name: Verify Java Version
         run: java -version
 
