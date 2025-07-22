@@ -2,17 +2,21 @@ package io.github.dariopipa.warehouse.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
+import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
 import io.github.dariopipa.warehouse.exceptions.ConflictException;
 import io.github.dariopipa.warehouse.exceptions.EntityNotFoundException;
 import io.github.dariopipa.warehouse.mappers.ProductMapper;
+import io.github.dariopipa.warehouse.mappers.ProductTypeMapper;
 import io.github.dariopipa.warehouse.repositories.ProductRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
@@ -72,10 +76,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductGetOneResponseDTO> getCollection() {
+	public Page<ProductGetOneResponseDTO> getCollection(Pageable pageable) {
+		return productRepository.findAll(pageable).map(ProductMapper::toDto);
 
-		return this.productRepository.findAll().stream()
-				.map(ProductMapper::toDto).toList();
 	}
 
 	@Override
@@ -109,4 +112,5 @@ public class ProductServiceImpl implements ProductService {
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Product not found with id: " + id));
 	}
+
 }

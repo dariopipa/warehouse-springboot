@@ -1,7 +1,6 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
+import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
+import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -36,8 +37,8 @@ public class ProductTypeController {
 		this.productTypeService = productTypeService;
 	}
 
-	@GetMapping("")
-	public List<ProductTypeResponseDTO> getProductTypes(
+	@GetMapping
+	public PaginatedResponse<ProductTypeResponseDTO> getProductTypes(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 
@@ -45,7 +46,7 @@ public class ProductTypeController {
 		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
 				.getCollection(pageable);
 
-		return paginatedResponse.getContent();
+		return PaginationUtils.buildPaginatedResponse(paginatedResponse);
 	}
 
 	@GetMapping("/{id}")
