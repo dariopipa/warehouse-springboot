@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(),
 				new Date(), ex.getMessage());
 
-		return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(Exception.class)
