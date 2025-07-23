@@ -1,21 +1,23 @@
 package io.github.dariopipa.warehouse.services.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
-import java.util.List;
 
 public interface ProductTypeService {
 
-    Long save(ProductTypesDTO productType);
+	Long save(ProductTypesDTO productType);
 
-    void update(Long id, ProductTypesDTO productType);
+	void update(Long id, ProductTypesDTO productType);
 
-    void delete(Long id);
+	void delete(Long id);
 
-    List<ProductTypeResponseDTO> getCollection();
+	Page<ProductTypeResponseDTO> getCollection(Pageable pageable);
 
-    ProductTypeResponseDTO getById(Long id);
+	ProductTypeResponseDTO getById(Long id);
 
-    ProductType getProductType(Long id);
+	ProductType getProductType(Long id);
 }

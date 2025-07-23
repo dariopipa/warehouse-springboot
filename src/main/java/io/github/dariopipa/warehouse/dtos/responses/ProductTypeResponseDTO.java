@@ -1,9 +1,11 @@
 package io.github.dariopipa.warehouse.dtos.responses;
 
+import java.time.Instant;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.time.Instant;
 
 public class ProductTypeResponseDTO {
 

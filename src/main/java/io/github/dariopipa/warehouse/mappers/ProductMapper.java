@@ -1,12 +1,12 @@
 package io.github.dariopipa.warehouse.mappers;
 
+import java.util.UUID;
+
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
-
-import java.util.UUID;
 
 public class ProductMapper {
 

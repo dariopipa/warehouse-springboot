@@ -1,5 +1,9 @@
 package io.github.dariopipa.warehouse.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
@@ -13,10 +17,6 @@ import io.github.dariopipa.warehouse.repositories.ProductRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 import jakarta.transaction.Transactional;
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -72,10 +72,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductGetOneResponseDTO> getCollection() {
+	public Page<ProductGetOneResponseDTO> getCollection(Pageable pageable) {
+		return productRepository.findAll(pageable).map(ProductMapper::toDto);
 
-		return this.productRepository.findAll().stream()
-				.map(ProductMapper::toDto).toList();
 	}
 
 	@Override
@@ -109,4 +108,5 @@ public class ProductServiceImpl implements ProductService {
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Product not found with id: " + id));
 	}
+
 }
