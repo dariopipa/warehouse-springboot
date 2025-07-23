@@ -1,7 +1,5 @@
 package io.github.dariopipa.warehouse.mappers;
 
-import java.util.UUID;
-
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
@@ -57,7 +55,6 @@ public class ProductMapper {
 	public static Product updateEntityFromDto(UpdateRequestDTO dto,
 			Product existingProduct, ProductType productType) {
 		// Keep immutable fields
-		existingProduct.setUuid(existingProduct.getUuid());
 		existingProduct.setSku(existingProduct.getSku());
 
 		// Update mutable fields

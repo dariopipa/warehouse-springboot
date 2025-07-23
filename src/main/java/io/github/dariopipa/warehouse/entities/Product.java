@@ -1,7 +1,6 @@
 package io.github.dariopipa.warehouse.entities;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SoftDelete;
@@ -67,14 +66,6 @@ public class Product {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
 	}
 
 	public String getSku() {
@@ -186,8 +177,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", uuid=" + uuid + ", sku=" + sku
-				+ ", name=" + name + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + "]";
+		return "Product [id=" + id + ", sku=" + sku + ", name=" + name
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 }
