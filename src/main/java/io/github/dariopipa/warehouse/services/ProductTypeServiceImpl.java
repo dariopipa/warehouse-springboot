@@ -21,7 +21,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
 	// REMOVE THE HARD-CODED USER WHEN AUTHENTICATION IS IMPLEMENTED.
 	private final Logger logger = LoggerFactory
-			.getLogger(ProductsController.class);
+			.getLogger(ProductTypeServiceImpl.class);
 
 	private final Long USER_ID = 1L;
 	private final ProductTypeRepository productTypeRepository;
