@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,6 +38,24 @@ public class GlobalExceptionHandler {
 				"An unexpected error occurred");
 
 		return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<Object> handleIllegalArgumentException(
+			IllegalArgumentException ex) {
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+				new Date(), ex.getMessage());
+
+		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<Object> handleConstraintViolation(
+			ConstraintViolationException ex) {
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+				new Date(), ex.getMessage());
+
+		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
 }

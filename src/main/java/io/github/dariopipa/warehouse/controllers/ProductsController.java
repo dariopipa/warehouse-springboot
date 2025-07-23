@@ -1,11 +1,14 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,9 +29,12 @@ import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@Validated
 @Tag(name = "Products")
 public class ProductsController {
 
@@ -83,10 +89,20 @@ public class ProductsController {
 
 	@GetMapping("")
 	public PaginatedResponse<ProductGetOneResponseDTO> getProductCollection(
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
+			@RequestParam(defaultValue = "0") @Min(0) int page,
+			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
+			@RequestParam(defaultValue = "name") String sortBy,
+			@RequestParam(defaultValue = "asc") String direction) {
 
-		Pageable pageable = PageRequest.of(page, size);
+		List<String> allowed = List.of("name", "createdAt", "quantity");
+		if (!allowed.contains(sortBy)) {
+			throw new IllegalArgumentException(
+					"sortBy must be one of: " + allowed);
+		}
+
+		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+		Pageable pageable = PageRequest.of(page, size, sort);
+
 		Page<ProductGetOneResponseDTO> paginatedResponse = productService
 				.getCollection(pageable);
 
