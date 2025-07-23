@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,6 +33,7 @@ import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/api/v1/product-types")
+@Validated
 @Tag(name = "Products Type")
 public class ProductTypeController {
 
@@ -56,7 +58,6 @@ public class ProductTypeController {
 
 		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
 		Pageable pageable = PageRequest.of(page, size, sort);
-
 		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
 				.getCollection(pageable);
 
