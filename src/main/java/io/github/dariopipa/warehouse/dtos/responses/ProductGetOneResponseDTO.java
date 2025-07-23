@@ -1,12 +1,10 @@
 package io.github.dariopipa.warehouse.dtos.responses;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public class ProductGetOneResponseDTO {
 
 	private Long id;
-	private UUID uuid;
 	private String sku;
 	private String name;
 	private String description;
@@ -62,14 +60,6 @@ public class ProductGetOneResponseDTO {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
 	}
 
 	public String getSku() {

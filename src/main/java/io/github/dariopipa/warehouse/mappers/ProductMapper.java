@@ -13,7 +13,6 @@ public class ProductMapper {
 	public static Product toEntity(CreateProductDTO dto, Long userId,
 			ProductType productType) {
 		Product product = new Product();
-		product.setUuid(UUID.randomUUID());
 
 		product.setSku("SKU-GEN-TO-BE-MADE");
 		product.setName(dto.getName());
@@ -36,7 +35,6 @@ public class ProductMapper {
 		ProductGetOneResponseDTO dto = new ProductGetOneResponseDTO();
 
 		dto.setId(productEntity.getId());
-		dto.setUuid(productEntity.getUuid());
 		dto.setName(productEntity.getName());
 		dto.setSku(productEntity.getSku());
 		dto.setDescription(productEntity.getDescription());
