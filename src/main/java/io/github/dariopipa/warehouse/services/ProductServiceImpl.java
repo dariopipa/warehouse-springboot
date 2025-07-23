@@ -28,7 +28,7 @@ import jakarta.transaction.Transactional;
 public class ProductServiceImpl implements ProductService {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(ProductsController.class);
+			.getLogger(ProductServiceImpl.class);
 
 	private final Long id = 1L;
 	private final ProductRepository productRepository;
