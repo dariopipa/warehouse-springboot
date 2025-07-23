@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
-import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
@@ -38,6 +38,8 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products")
 public class ProductsController {
 
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
+			.getLogger(ProductsController.class);
 	private final ProductService productService;
 
 	public ProductsController(ProductService productService) {
@@ -47,43 +49,59 @@ public class ProductsController {
 	@PostMapping("")
 	public ResponseEntity<Void> createProduct(
 			@Valid @RequestBody CreateProductDTO requestBody) {
+		logger.info("Creating new product with name: {}",
+				requestBody.getName());
 
 		Long id = this.productService.save(requestBody);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(id).toUri();
 
+		logger.info("Product created successfully with id: {}", id);
 		return ResponseEntity.created(location).build();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductGetOneResponseDTO> getProduct(
 			@PathVariable Long id) {
-
+		logger.info("Fetching product with id: {}", id);
 		ProductGetOneResponseDTO productGetOneResponseDTO = this.productService
 				.getById(id);
+
+		logger.debug("Product retrieved successfully: {}",
+				productGetOneResponseDTO.getName());
 		return ResponseEntity.ok(productGetOneResponseDTO);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-
+		logger.info("Deleting product with id: {}", id);
 		this.productService.delete(id);
+
+		logger.info("Product deleted successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateEntity(@PathVariable Long id,
 			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO) {
-
+		logger.info("Updating product with id: {} and name: {}", id,
+				updateRequestDTO.getName());
 		this.productService.update(id, updateRequestDTO);
+
+		logger.info("Product updated successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}/quantity")
 	public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
 			@Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+		logger.info(
+				"Updating quantity for product id: {} with operation: {} and quantity: {}",
+				id, updateQuantityRequestDTO.getOperation(),
+				updateQuantityRequestDTO.getQuantity());
 
 		this.productService.updateQuantity(id, updateQuantityRequestDTO);
+		logger.info("Product quantity updated successfully for id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -93,9 +111,15 @@ public class ProductsController {
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "name") String sortBy,
 			@RequestParam(defaultValue = "asc") String direction) {
+		logger.info(
+				"Fetching product collection - page: {}, size: {}, sortBy: {}, direction: {}",
+				page, size, sortBy, direction);
 
 		List<String> allowed = List.of("name", "createdAt", "quantity");
 		if (!allowed.contains(sortBy)) {
+			logger.warn("Invalid sortBy parameter: {}. Allowed values: {}",
+					sortBy, allowed);
+
 			throw new IllegalArgumentException(
 					"sortBy must be one of: " + allowed);
 		}
@@ -104,6 +128,10 @@ public class ProductsController {
 		Pageable pageable = PageRequest.of(page, size, sort);
 		Page<ProductGetOneResponseDTO> paginatedResponse = productService
 				.getCollection(pageable);
+
+		logger.debug(
+				"Product collection retrieved successfully - total elements: {}",
+				paginatedResponse.getTotalElements());
 
 		return PaginationUtils.buildPaginatedResponse(paginatedResponse);
 	}
