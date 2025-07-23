@@ -102,7 +102,6 @@ public class ProductsController {
 
 		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
 		Pageable pageable = PageRequest.of(page, size, sort);
-
 		Page<ProductGetOneResponseDTO> paginatedResponse = productService
 				.getCollection(pageable);
 
