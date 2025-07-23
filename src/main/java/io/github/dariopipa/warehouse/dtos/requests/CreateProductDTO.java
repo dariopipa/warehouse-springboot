@@ -3,13 +3,16 @@ package io.github.dariopipa.warehouse.dtos.requests;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 public class CreateProductDTO {
 
 	@NotBlank
+	@Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
 	private String name;
 
 	@NotBlank
+	@Size(max = 500, message = "Description cannot exceed 500 characters")
 	private String description;
 
 	@NotNull
@@ -20,8 +23,16 @@ public class CreateProductDTO {
 	@PositiveOrZero
 	private Integer lowStockThreshold;
 
+	@NotNull
+	@PositiveOrZero
 	private Double weight;
+
+	@NotNull
+	@PositiveOrZero
 	private Double height;
+
+	@NotNull
+	@PositiveOrZero
 	private Double length;
 
 	@NotNull

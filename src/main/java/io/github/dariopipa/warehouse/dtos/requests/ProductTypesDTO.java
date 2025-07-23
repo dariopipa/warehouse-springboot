@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class ProductTypesDTO {
 
 	@NotBlank(message = "Name is required")
-	@Size(max = 255, message = "Name must be at most 255 characters")
+	@Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
 	private String name;
 
 	// Getters and setters

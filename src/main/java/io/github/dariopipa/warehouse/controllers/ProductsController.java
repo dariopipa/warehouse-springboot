@@ -22,7 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
-import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
@@ -73,7 +73,7 @@ public class ProductsController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateEntity(@PathVariable Long id,
-			@Valid @RequestBody UpdateRequestDTO updateRequestDTO) {
+			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO) {
 
 		this.productService.update(id, updateRequestDTO);
 		return ResponseEntity.noContent().build();
