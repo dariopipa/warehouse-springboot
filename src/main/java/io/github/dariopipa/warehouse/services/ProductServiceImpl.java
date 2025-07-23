@@ -1,12 +1,13 @@
 package io.github.dariopipa.warehouse.services;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
-import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
@@ -16,20 +17,25 @@ import io.github.dariopipa.warehouse.mappers.ProductMapper;
 import io.github.dariopipa.warehouse.repositories.ProductRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
+import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
 import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
 	private final Long id = 1L;
 
 	private final ProductRepository productRepository;
 	private final ProductTypeService productTypeService;
+	private final SkuGeneratorService skuGeneratorService;
 
 	public ProductServiceImpl(ProductRepository productRepository,
-			ProductTypeService productTypeService) {
+			ProductTypeService productTypeService,
+			SkuGeneratorService skuGeneratorService) {
 		this.productRepository = productRepository;
 		this.productTypeService = productTypeService;
+		this.skuGeneratorService = skuGeneratorService;
 	}
 
 	@Override
@@ -40,21 +46,26 @@ public class ProductServiceImpl implements ProductService {
 					"Product already exists with that name");
 		}
 
-		// remove the "sku-generator"
-		if (this.productRepository.existsBySku("SKU-GEN-TO-BE-MADE")) {
+		ProductType productType = productTypeService
+				.getProductType(dto.getProductTypeId());
+
+		String generatedSku = skuGeneratorService.generateSku(dto.getName(),
+				productType.getName());
+
+		Product productEntity = ProductMapper.toEntity(dto, id, productType,
+				generatedSku);
+		try {
+			Product savedEntity = this.productRepository.save(productEntity);
+			return savedEntity.getId();
+
+		} catch (DataIntegrityViolationException e) {
 			throw new ConflictException("Sku already exists");
 		}
 
-		ProductType productType = productTypeService
-				.getProductType(dto.getProductTypeId());
-		Product productEntity = ProductMapper.toEntity(dto, id, productType);
-		Product savedEntity = this.productRepository.save(productEntity);
-
-		return savedEntity.getId();
 	}
 
 	@Override
-	public void update(Long id, UpdateRequestDTO updateRequestDTO) {
+	public void update(Long id, UpdateProductRequestDTO updateRequestDTO) {
 
 		Product product = getProduct(id);
 		ProductType productType = productTypeService

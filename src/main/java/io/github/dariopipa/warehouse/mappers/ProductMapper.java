@@ -1,7 +1,7 @@
 package io.github.dariopipa.warehouse.mappers;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
-import io.github.dariopipa.warehouse.dtos.requests.UpdateRequestDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
@@ -9,10 +9,11 @@ import io.github.dariopipa.warehouse.entities.ProductType;
 public class ProductMapper {
 
 	public static Product toEntity(CreateProductDTO dto, Long userId,
-			ProductType productType) {
+			ProductType productType, String generatedSku) {
 		Product product = new Product();
 
-		product.setSku("SKU-GEN-TO-BE-MADE");
+		product.setSku(generatedSku);
+
 		product.setName(dto.getName());
 		product.setDescription(dto.getDescription());
 		product.setQuantity(dto.getQuantity());
@@ -52,7 +53,7 @@ public class ProductMapper {
 		return dto;
 	}
 
-	public static Product updateEntityFromDto(UpdateRequestDTO dto,
+	public static Product updateEntityFromDto(UpdateProductRequestDTO dto,
 			Product existingProduct, ProductType productType) {
 		// Keep immutable fields
 		existingProduct.setSku(existingProduct.getSku());
