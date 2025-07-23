@@ -3,6 +3,8 @@ package io.github.dariopipa.warehouse.controllers;
 import java.net.URI;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +39,9 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products Type")
 public class ProductTypeController {
 
+	private final Logger logger = LoggerFactory
+			.getLogger(ProductsController.class);
+
 	private final ProductTypeService productTypeService;
 
 	public ProductTypeController(ProductTypeService productTypeService) {
@@ -49,17 +54,27 @@ public class ProductTypeController {
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "name") String sortBy,
 			@RequestParam(defaultValue = "asc") String direction) {
+		logger.info(
+				"Fetching product types collection - page: {}, size: {}, sortBy: {}, direction: {}",
+				page, size, sortBy, direction);
 
 		List<String> allowed = List.of("name", "createdAt");
 		if (!allowed.contains(sortBy)) {
+
+			logger.warn("Invalid sortBy parameter: {}. Allowed values: {}",
+					sortBy, allowed);
+
 			throw new IllegalArgumentException(
 					"sortBy must be one of: " + allowed);
 		}
-
 		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
 		Pageable pageable = PageRequest.of(page, size, sort);
 		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
 				.getCollection(pageable);
+
+		logger.debug(
+				"Product types collection retrieved successfully - total elements: {}",
+				paginatedResponse.getTotalElements());
 
 		return PaginationUtils.buildPaginatedResponse(paginatedResponse);
 	}
@@ -67,35 +82,48 @@ public class ProductTypeController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductTypeResponseDTO> getProductType(
 			@PathVariable Long id) {
+		logger.info("Fetching product type with id: {}", id);
 
 		ProductTypeResponseDTO productType = this.productTypeService
 				.getById(id);
+
+		logger.debug("Product type retrieved successfully: {}",
+				productType.getName());
+
 		return ResponseEntity.ok(productType);
 	}
 
 	@PostMapping("")
 	public ResponseEntity<Void> createProductTypes(
 			@Valid @RequestBody ProductTypesDTO productType) {
+		logger.info("Creating new product type with name: {}",
+				productType.getName());
 
 		Long id = this.productTypeService.save(productType);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(id).toUri();
 
+		logger.info("Product type created successfully with id: {}", id);
 		return ResponseEntity.created(location).build();
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id) {
-
+		logger.info("Deleting product type with id: {}", id);
 		this.productTypeService.delete(id);
+
+		logger.info("Product type deleted successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<ProductType> updateProductTypes(@PathVariable Long id,
 			@Valid @RequestBody ProductTypesDTO productType) {
-
+		logger.info("Updating product type with id: {} and name: {}", id,
+				productType.getName());
 		this.productTypeService.update(id, productType);
+
+		logger.info("Product type updated successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
 }

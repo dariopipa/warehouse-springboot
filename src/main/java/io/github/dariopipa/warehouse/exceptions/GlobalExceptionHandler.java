@@ -18,7 +18,6 @@ public class GlobalExceptionHandler {
 	private final Logger logger = LoggerFactory
 			.getLogger(ProductsController.class);
 
-
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Object> handleEntityNotFoundException(
 			EntityNotFoundException ex) {

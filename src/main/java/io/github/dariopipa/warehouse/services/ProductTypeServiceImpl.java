@@ -84,8 +84,8 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 	@Override
 	public void delete(Long id) {
 		logger.info("Deleting product type with id: {}", id);
-
 		ProductType productType = getProductType(id);
+
 		this.productTypeRepository.delete(productType);
 		logger.info("Product type deleted with id: {}", id);
 	}

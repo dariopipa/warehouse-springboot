@@ -3,6 +3,8 @@ package io.github.dariopipa.warehouse.controllers;
 import java.net.URI;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +40,9 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products")
 public class ProductsController {
 
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
+	private final Logger logger = LoggerFactory
 			.getLogger(ProductsController.class);
+
 	private final ProductService productService;
 
 	public ProductsController(ProductService productService) {
