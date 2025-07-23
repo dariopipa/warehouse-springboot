@@ -40,7 +40,7 @@ import jakarta.validation.constraints.Min;
 public class ProductTypeController {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(ProductsController.class);
+			.getLogger(ProductTypeController.class);
 
 	private final ProductTypeService productTypeService;
 
