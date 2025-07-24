@@ -135,7 +135,6 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		this.productRepository.updateQuantityById(id, delta);
-
 		this.stockAlertService.alertStockLow(product, newQuantity);
 
 		logger.info("Quantity updated for product id: {} by delta: {}", id,

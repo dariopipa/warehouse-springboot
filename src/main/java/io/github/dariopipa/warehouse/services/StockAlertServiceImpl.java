@@ -27,13 +27,11 @@ public class StockAlertServiceImpl implements StockAlertService {
 
 	@Override
 	public void alertStockLow(Product product, int newQuantity) {
-
 		if (newQuantity >= product.getLowStockThreshold()) {
 			return;
 		}
 
 		this.emailService.sendEmail();
-
 		StockAlert alert = new StockAlert();
 		alert.setProduct(product);
 		alert.setEmailSent(true);
