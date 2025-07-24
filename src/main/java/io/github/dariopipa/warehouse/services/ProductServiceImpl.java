@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import io.github.dariopipa.warehouse.audit.AuditAction;
+import io.github.dariopipa.warehouse.audit.AuditLogger;
+import io.github.dariopipa.warehouse.audit.EntityType;
 import io.github.dariopipa.warehouse.controllers.ProductsController;
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
@@ -30,17 +33,19 @@ public class ProductServiceImpl implements ProductService {
 	private final Logger logger = LoggerFactory
 			.getLogger(ProductServiceImpl.class);
 
-	private final Long id = 1L;
+	private final Long USER_ID = 1L;
 	private final ProductRepository productRepository;
 	private final ProductTypeService productTypeService;
 	private final SkuGeneratorService skuGeneratorService;
+	private final AuditLogger auditLogger;
 
 	public ProductServiceImpl(ProductRepository productRepository,
 			ProductTypeService productTypeService,
-			SkuGeneratorService skuGeneratorService) {
+			SkuGeneratorService skuGeneratorService, AuditLogger auditLogger) {
 		this.productRepository = productRepository;
 		this.productTypeService = productTypeService;
 		this.skuGeneratorService = skuGeneratorService;
+		this.auditLogger = auditLogger;
 	}
 
 	@Override
@@ -57,11 +62,14 @@ public class ProductServiceImpl implements ProductService {
 				.getProductType(dto.getProductTypeId());
 		String generatedSku = skuGeneratorService.generateSku(dto.getName(),
 				productType.getName());
-		Product productEntity = ProductMapper.toEntity(dto, id, productType,
-				generatedSku);
+		Product productEntity = ProductMapper.toEntity(dto, USER_ID,
+				productType, generatedSku);
 		try {
 			Product savedEntity = this.productRepository.save(productEntity);
 			logger.info("Product saved with id: {}", savedEntity.getId());
+
+			auditLogger.log(USER_ID, AuditAction.CREATE,
+					EntityType.PRODUCT, savedEntity.getId());
 
 			return savedEntity.getId();
 		} catch (DataIntegrityViolationException e) {
@@ -84,6 +92,9 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository.save(ProductMapper
 				.updateEntityFromDto(updateRequestDTO, product, productType));
 		logger.info("Product updated with id: {}", id);
+		
+		auditLogger.log(USER_ID, AuditAction.UPDATE,
+				EntityType.PRODUCT, id);
 	}
 
 	@Override
@@ -93,6 +104,8 @@ public class ProductServiceImpl implements ProductService {
 
 		this.productRepository.delete(product);
 		logger.info("Product deleted with id: {}", id);
+		auditLogger.log(USER_ID, AuditAction.DELETE,
+				EntityType.PRODUCT, id);
 	}
 
 	@Override
@@ -109,6 +122,7 @@ public class ProductServiceImpl implements ProductService {
 		return ProductMapper.toDto(product);
 	}
 
+	// AFTER FIXING THE GAZILLION MERGE CONFLICTS ADD HERE THE AUDITLOGGER.LOG();
 	@Override
 	@Transactional
 	public void updateQuantity(Long id,

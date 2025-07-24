@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import io.github.dariopipa.warehouse.controllers.ProductsController;
+import io.github.dariopipa.warehouse.audit.AuditAction;
+import io.github.dariopipa.warehouse.audit.AuditLogger;
+import io.github.dariopipa.warehouse.audit.EntityType;
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
@@ -25,9 +27,12 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
 	private final Long USER_ID = 1L;
 	private final ProductTypeRepository productTypeRepository;
+	private final AuditLogger auditLogger;
 
-	public ProductTypeServiceImpl(ProductTypeRepository productTypeRepository) {
+	public ProductTypeServiceImpl(ProductTypeRepository productTypeRepository,
+			AuditLogger auditLogger) {
 		this.productTypeRepository = productTypeRepository;
+		this.auditLogger = auditLogger;
 	}
 
 	@Override
@@ -60,6 +65,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		ProductType saved = productTypeRepository.save(entity);
 
 		logger.info("Product type saved with id: {}", saved.getId());
+
+		auditLogger.log(USER_ID, AuditAction.CREATE, EntityType.PRODUCT_TYPE,
+				saved.getId());
 		return saved.getId();
 	}
 
@@ -79,6 +87,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		existingProductType.setName(productType.getName());
 		this.productTypeRepository.save(existingProductType);
 		logger.info("Product type updated with id: {}", id);
+		
+		auditLogger.log(USER_ID, AuditAction.UPDATE, EntityType.PRODUCT_TYPE,
+				id);
 	}
 
 	@Override
@@ -88,6 +99,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
 		this.productTypeRepository.delete(productType);
 		logger.info("Product type deleted with id: {}", id);
+
+		auditLogger.log(USER_ID, AuditAction.DELETE, EntityType.PRODUCT_TYPE,
+				id);
 	}
 
 	public ProductType getProductType(Long id) {
