@@ -13,7 +13,7 @@ import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
 public class SkuGeneratorImpl implements SkuGeneratorService {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(SkuGeneratorImpl.class);
+			.getLogger(ProductsController.class);
 
 	@Override
 	public String generateSku(String productName, String productTypeName) {

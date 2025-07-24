@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import io.github.dariopipa.warehouse.controllers.ProductsController;
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
@@ -21,6 +20,7 @@ import io.github.dariopipa.warehouse.repositories.ProductRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
+import io.github.dariopipa.warehouse.services.interfaces.StockAlertService;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -34,13 +34,16 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 	private final ProductTypeService productTypeService;
 	private final SkuGeneratorService skuGeneratorService;
+	private final StockAlertService stockAlertService;
 
 	public ProductServiceImpl(ProductRepository productRepository,
 			ProductTypeService productTypeService,
-			SkuGeneratorService skuGeneratorService) {
+			SkuGeneratorService skuGeneratorService,
+			StockAlertService stockAlertService) {
 		this.productRepository = productRepository;
 		this.productTypeService = productTypeService;
 		this.skuGeneratorService = skuGeneratorService;
+		this.stockAlertService = stockAlertService;
 	}
 
 	@Override
@@ -119,13 +122,21 @@ public class ProductServiceImpl implements ProductService {
 				id, updateQuantityRequestDTO.getOperation(),
 				updateQuantityRequestDTO.getQuantity());
 
-		getProduct(id);
+		Product product = getProduct(id);
 		int delta = updateQuantityRequestDTO
 				.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
 						? updateQuantityRequestDTO.getQuantity()
 						: -updateQuantityRequestDTO.getQuantity();
 
+		int newQuantity = product.getQuantity() + delta;
+		if (newQuantity < 0) {
+			throw new IllegalArgumentException(
+					"Product quantity cannot be reduced to less than 0");
+		}
+
 		this.productRepository.updateQuantityById(id, delta);
+
+		this.stockAlertService.alertStockLow(product, newQuantity);
 
 		logger.info("Quantity updated for product id: {} by delta: {}", id,
 				delta);
@@ -134,6 +145,13 @@ public class ProductServiceImpl implements ProductService {
 	private Product getProduct(Long id) {
 		logger.debug("Retrieving product with id: {}", id);
 
+		return this.productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(
+						"Product not found with id: " + id));
+	}
+
+	@Override
+	public Product getProductEntityById(Long id) {
 		return this.productRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Product not found with id: " + id));
