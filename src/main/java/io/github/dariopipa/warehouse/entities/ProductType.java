@@ -99,6 +99,7 @@ public class ProductType {
 		this.products = products;
 	}
 
+	// Required by JPA
 	public ProductType() {
 	}
 

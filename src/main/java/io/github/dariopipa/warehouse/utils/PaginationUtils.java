@@ -7,13 +7,12 @@ import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 public class PaginationUtils {
 
 	private PaginationUtils() {
-
 	}
 
 	public static <T> PaginatedResponse<T> buildPaginatedResponse(
 			Page<T> pageData) {
 
-		PaginatedResponse<T> response = new PaginatedResponse<T>();
+		PaginatedResponse<T> response = new PaginatedResponse<>();
 
 		response.setData(pageData.getContent());
 		response.setCurrentPage(pageData.getNumber());

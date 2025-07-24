@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import io.github.dariopipa.warehouse.controllers.ProductsController;
 import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
 
 @Service

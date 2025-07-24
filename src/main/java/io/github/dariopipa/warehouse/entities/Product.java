@@ -172,6 +172,7 @@ public class Product {
 		this.productType = productType;
 	}
 
+	// Required by JPA
 	public Product() {
 	}
 

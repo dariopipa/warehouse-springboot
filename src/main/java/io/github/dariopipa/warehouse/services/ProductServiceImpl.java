@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import io.github.dariopipa.warehouse.controllers.ProductsController;
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
