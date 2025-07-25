@@ -23,6 +23,7 @@ public class AuditLogger {
 
 		AuditLogEvent event = new AuditLogEvent(userId, action, entityType,
 				entityId, details);
+		
 		publisher.publishEvent(event);
 	}
 }
