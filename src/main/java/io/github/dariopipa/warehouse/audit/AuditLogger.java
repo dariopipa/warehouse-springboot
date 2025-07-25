@@ -3,14 +3,14 @@ package io.github.dariopipa.warehouse.audit;
 import java.time.Instant;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import io.github.dariopipa.warehouse.enums.AuditAction;
 import io.github.dariopipa.warehouse.enums.EntityType;
 import io.github.dariopipa.warehouse.enums.OperationsType;
 import io.github.dariopipa.warehouse.events.AuditLogEvent;
 
-@Service
+@Component
 public class AuditLogger {
 
 	private final ApplicationEventPublisher publisher;
@@ -37,7 +37,8 @@ public class AuditLogger {
 				userId, entityType.name().toLowerCase(), entityId,
 				operation.name(), quantityChange, Instant.now());
 
-		createAndPublishEvent(userId, AuditAction.UPDATE, entityType, entityId, details);
+		createAndPublishEvent(userId, AuditAction.UPDATE, entityType, entityId,
+				details);
 	}
 
 	private void createAndPublishEvent(Long userId, AuditAction action,
