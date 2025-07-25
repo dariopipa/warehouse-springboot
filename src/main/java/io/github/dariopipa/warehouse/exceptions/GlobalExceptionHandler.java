@@ -9,14 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import io.github.dariopipa.warehouse.controllers.ProductsController;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(ProductsController.class);
+			.getLogger(GlobalExceptionHandler.class);
 
 
 	@ExceptionHandler(EntityNotFoundException.class)
