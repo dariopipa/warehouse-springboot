@@ -1,15 +1,9 @@
 package io.github.dariopipa.warehouse.repositories;
 
-import java.util.List;
-
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import io.github.dariopipa.warehouse.entities.AuditLog;
 
-public interface AuditLogRepository extends Repository<AuditLog, Long> {
-
-	void save(AuditLog auditLog);
-
-	List<AuditLog> findAll();
+public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
 }

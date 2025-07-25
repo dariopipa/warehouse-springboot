@@ -1,16 +1,17 @@
 package io.github.dariopipa.warehouse.audit;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import io.github.dariopipa.warehouse.enums.AuditAction;
 import io.github.dariopipa.warehouse.enums.EntityType;
 import io.github.dariopipa.warehouse.enums.OperationsType;
 import io.github.dariopipa.warehouse.events.AuditLogEvent;
 
-@Service
+@Component
 public class AuditLogger {
 
 	private final ApplicationEventPublisher publisher;
@@ -24,7 +25,8 @@ public class AuditLogger {
 
 		String details = String.format("User %d %s a %s with ID %d at %s",
 				userId, action.name().toLowerCase(),
-				entityType.name().toLowerCase(), entityId, Instant.now());
+				entityType.name().toLowerCase(), entityId,
+				getCurrentTimestamp());
 
 		createAndPublishEvent(userId, action, entityType, entityId, details);
 	}
@@ -35,9 +37,10 @@ public class AuditLogger {
 		String details = String.format(
 				"User %d updated a %s with ID %d: %s quantity by %d at %s",
 				userId, entityType.name().toLowerCase(), entityId,
-				operation.name(), quantityChange, Instant.now());
+				operation.name(), quantityChange, getCurrentTimestamp());
 
-		createAndPublishEvent(userId, AuditAction.UPDATE, entityType, entityId, details);
+		createAndPublishEvent(userId, AuditAction.UPDATE, entityType, entityId,
+				details);
 	}
 
 	private void createAndPublishEvent(Long userId, AuditAction action,
@@ -48,4 +51,8 @@ public class AuditLogger {
 		publisher.publishEvent(event);
 	}
 
+	private String getCurrentTimestamp() {
+		return LocalDateTime.now()
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
 }

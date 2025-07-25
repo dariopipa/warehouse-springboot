@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -16,7 +17,6 @@ public class GlobalExceptionHandler {
 
 	private final Logger logger = LoggerFactory
 			.getLogger(GlobalExceptionHandler.class);
-
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Object> handleEntityNotFoundException(
@@ -58,7 +58,8 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(ConstraintViolationException.class)
+	@ExceptionHandler({ConstraintViolationException.class,
+			MethodArgumentTypeMismatchException.class})
 	public ResponseEntity<Object> handleConstraintViolation(
 			ConstraintViolationException ex) {
 		logger.warn("Validation constraint violated: {}", ex.getMessage());

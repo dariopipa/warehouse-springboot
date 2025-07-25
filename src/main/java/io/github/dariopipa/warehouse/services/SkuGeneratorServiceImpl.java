@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
 
 @Service
-public class SkuGeneratorImpl implements SkuGeneratorService {
+public class SkuGeneratorServiceImpl implements SkuGeneratorService {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(SkuGeneratorImpl.class);
+			.getLogger(SkuGeneratorServiceImpl.class);
 
 	@Override
 	public String generateSku(String productName, String productTypeName) {

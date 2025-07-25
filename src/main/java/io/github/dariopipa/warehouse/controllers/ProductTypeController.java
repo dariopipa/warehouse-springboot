@@ -1,7 +1,6 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,8 @@ import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
+import io.github.dariopipa.warehouse.enums.ProductTypeSortByEnum;
+import io.github.dariopipa.warehouse.enums.SortDirectionEnum;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,22 +53,17 @@ public class ProductTypeController {
 	public PaginatedResponse<ProductTypeResponseDTO> getProductTypes(
 			@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
-			@RequestParam(defaultValue = "name") String sortBy,
-			@RequestParam(defaultValue = "asc") String direction) {
+			@RequestParam(defaultValue = "name") ProductTypeSortByEnum sortBy,
+			@RequestParam(defaultValue = "desc") SortDirectionEnum direction) {
 		logger.info(
 				"Fetching product types collection - page: {}, size: {}, sortBy: {}, direction: {}",
 				page, size, sortBy, direction);
 
-		List<String> allowed = List.of("name", "createdAt");
-		if (!allowed.contains(sortBy)) {
+		String sortColumn = sortBy.getProperty();
+		Sort.Direction sortDirection = Sort.Direction
+				.fromString(direction.name());
 
-			logger.warn("Invalid sortBy parameter: {}. Allowed values: {}",
-					sortBy, allowed);
-
-			throw new IllegalArgumentException(
-					"sortBy must be one of: " + allowed);
-		}
-		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+		Sort sort = Sort.by(sortDirection, sortColumn);
 		Pageable pageable = PageRequest.of(page, size, sort);
 		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
 				.getCollection(pageable);
