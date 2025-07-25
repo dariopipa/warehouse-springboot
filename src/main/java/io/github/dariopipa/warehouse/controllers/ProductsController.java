@@ -1,7 +1,6 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +114,7 @@ public class ProductsController {
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "name") ProductSortByEnum sortBy,
 			@RequestParam(defaultValue = "desc") SortDirectionEnum direction) {
-		
+
 		logger.info(
 				"Fetching product collection - page: {}, size: {}, sortBy: {}, direction: {}",
 				page, size, sortBy, direction);
@@ -123,8 +122,8 @@ public class ProductsController {
 		String sortColumn = sortBy.getProperty();
 		Sort.Direction sortDirection = Sort.Direction
 				.fromString(direction.name());
-		
-		Sort sort = Sort.by(sortDirection, sortColumn);		
+
+		Sort sort = Sort.by(sortDirection, sortColumn);
 		Pageable pageable = PageRequest.of(page, size, sort);
 		Page<ProductGetOneResponseDTO> paginatedResponse = productService
 				.getCollection(pageable);

@@ -18,7 +18,6 @@ import io.github.dariopipa.warehouse.enums.SortDirectionEnum;
 import io.github.dariopipa.warehouse.services.interfaces.AuditLogService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
