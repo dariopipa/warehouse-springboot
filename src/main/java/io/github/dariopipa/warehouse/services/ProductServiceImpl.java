@@ -16,6 +16,7 @@ import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.ProductType;
 import io.github.dariopipa.warehouse.enums.AuditAction;
 import io.github.dariopipa.warehouse.enums.EntityType;
+import io.github.dariopipa.warehouse.enums.OperationsType;
 import io.github.dariopipa.warehouse.exceptions.ConflictException;
 import io.github.dariopipa.warehouse.exceptions.EntityNotFoundException;
 import io.github.dariopipa.warehouse.mappers.ProductMapper;
@@ -124,8 +125,6 @@ public class ProductServiceImpl implements ProductService {
 		return ProductMapper.toDto(product);
 	}
 
-	// AFTER FIXING THE GAZILLION MERGE CONFLICTS ADD HERE THE
-	// AUDITLOGGER.LOG();
 	@Override
 	@Transactional
 	public void updateQuantity(Long id,
@@ -138,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
 
 		Product product = getProduct(id);
 		int delta = updateQuantityRequestDTO
-				.getOperation() == UpdateQuantityRequestDTO.Operation.INCREASE
+				.getOperation() == OperationsType.INCREASE
 						? updateQuantityRequestDTO.getQuantity()
 						: -updateQuantityRequestDTO.getQuantity();
 
@@ -150,6 +149,8 @@ public class ProductServiceImpl implements ProductService {
 
 		this.productRepository.updateQuantityById(id, delta);
 		this.stockAlertService.alertStockLow(product, newQuantity);
+		this.auditLogger.logQuantityUpdate(USER_ID, EntityType.PRODUCT, id,
+				updateQuantityRequestDTO.getOperation(), newQuantity);
 
 		logger.info("Quantity updated for product id: {} by delta: {}", id,
 				delta);
