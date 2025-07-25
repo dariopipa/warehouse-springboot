@@ -1,6 +1,7 @@
 package io.github.dariopipa.warehouse.services.interfaces;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import io.github.dariopipa.warehouse.entities.AuditLog;
 import io.github.dariopipa.warehouse.events.AuditLogEvent;
@@ -9,6 +10,6 @@ public interface AuditLogService {
 
 	void save(AuditLogEvent event);
 
-	List<AuditLog> findAll();
+	Page<AuditLog> findAll(Pageable pageable);
 
 }

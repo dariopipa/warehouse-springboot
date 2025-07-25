@@ -1,7 +1,7 @@
 package io.github.dariopipa.warehouse.services;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.github.dariopipa.warehouse.entities.AuditLog;
@@ -27,8 +27,8 @@ public class AuditLogServiceImpl implements AuditLogService {
 	}
 
 	@Override
-	public List<AuditLog> findAll() {
-		return this.auditLogRepository.findAll();
+	public Page<AuditLog> findAll(Pageable pageable) {
+		return this.auditLogRepository.findAll(pageable);
 	}
 
 }
