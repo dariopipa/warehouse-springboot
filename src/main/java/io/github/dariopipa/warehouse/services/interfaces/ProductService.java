@@ -7,6 +7,7 @@ import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
+import io.github.dariopipa.warehouse.entities.Product;
 
 public interface ProductService {
 
@@ -19,6 +20,8 @@ public interface ProductService {
 	Page<ProductGetOneResponseDTO> getCollection(Pageable pageable);
 
 	ProductGetOneResponseDTO getById(Long id);
+
+	Product getProductEntityById(Long id);
 
 	void updateQuantity(Long id,
 			UpdateQuantityRequestDTO updateQuantityRequestDTO);

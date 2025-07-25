@@ -42,7 +42,6 @@ public class ProductsController {
 
 	private final Logger logger = LoggerFactory
 			.getLogger(ProductsController.class);
-
 	private final ProductService productService;
 
 	public ProductsController(ProductService productService) {
