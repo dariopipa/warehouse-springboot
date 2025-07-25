@@ -5,8 +5,8 @@ import java.time.Instant;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Immutable;
 
-import io.github.dariopipa.warehouse.audit.AuditAction;
-import io.github.dariopipa.warehouse.audit.EntityType;
+import io.github.dariopipa.warehouse.enums.AuditAction;
+import io.github.dariopipa.warehouse.enums.EntityType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

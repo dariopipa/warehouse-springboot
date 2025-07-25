@@ -6,12 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import io.github.dariopipa.warehouse.audit.AuditAction;
 import io.github.dariopipa.warehouse.audit.AuditLogger;
-import io.github.dariopipa.warehouse.audit.EntityType;
 import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
+import io.github.dariopipa.warehouse.enums.AuditAction;
+import io.github.dariopipa.warehouse.enums.EntityType;
 import io.github.dariopipa.warehouse.exceptions.ConflictException;
 import io.github.dariopipa.warehouse.exceptions.EntityNotFoundException;
 import io.github.dariopipa.warehouse.mappers.ProductTypeMapper;
@@ -87,7 +87,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		existingProductType.setName(productType.getName());
 		this.productTypeRepository.save(existingProductType);
 		logger.info("Product type updated with id: {}", id);
-		
+
 		auditLogger.log(USER_ID, AuditAction.UPDATE, EntityType.PRODUCT_TYPE,
 				id);
 	}

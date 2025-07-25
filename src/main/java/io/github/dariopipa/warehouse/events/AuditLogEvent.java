@@ -1,7 +1,7 @@
 package io.github.dariopipa.warehouse.events;
 
-import io.github.dariopipa.warehouse.audit.AuditAction;
-import io.github.dariopipa.warehouse.audit.EntityType;
+import io.github.dariopipa.warehouse.enums.AuditAction;
+import io.github.dariopipa.warehouse.enums.EntityType;
 
 public class AuditLogEvent {
 	private final Long userId;
