@@ -40,7 +40,7 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products")
 public class ProductsController {
 
-	private static final Logger logger = LoggerFactory
+	private final Logger logger = LoggerFactory
 			.getLogger(ProductsController.class);
 	private final ProductService productService;
 
