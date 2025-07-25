@@ -16,7 +16,8 @@ import jakarta.validation.ConstraintViolationException;
 public class GlobalExceptionHandler {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(GlobalExceptionHandler.class);
+			.getLogger(ProductsController.class);
+
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Object> handleEntityNotFoundException(

@@ -21,7 +21,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
 	// REMOVE THE HARD-CODED USER WHEN AUTHENTICATION IS IMPLEMENTED.
 	private final Logger logger = LoggerFactory
-			.getLogger(ProductTypeServiceImpl.class);
+			.getLogger(ProductsController.class);
 
 	private final Long USER_ID = 1L;
 	private final ProductTypeRepository productTypeRepository;
@@ -84,8 +84,8 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 	@Override
 	public void delete(Long id) {
 		logger.info("Deleting product type with id: {}", id);
-		ProductType productType = getProductType(id);
 
+		ProductType productType = getProductType(id);
 		this.productTypeRepository.delete(productType);
 		logger.info("Product type deleted with id: {}", id);
 	}
