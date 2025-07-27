@@ -15,7 +15,7 @@ public class SendEmailDTO {
 	private String from;
 
 	@NotBlank
-	@Size
+	@Size(min = 1, max = 200)
 	private String subject;
 
 	@NotBlank
