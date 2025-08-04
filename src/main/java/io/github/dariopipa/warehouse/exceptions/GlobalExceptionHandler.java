@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -64,6 +65,34 @@ public class GlobalExceptionHandler {
 			ConstraintViolationException ex) {
 		logger.warn("Validation constraint violated: {}", ex.getMessage());
 
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+				new Date(), ex.getMessage());
+		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(UserAlreadyExistsException.class)
+	public ResponseEntity<Object> handleUserAlreadyExistsException(
+			UserAlreadyExistsException ex) {
+		logger.warn("User already exists: {}", ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(),
+				new Date(), ex.getMessage());
+		return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<Object> handleBadCredentialsException(
+			BadCredentialsException ex) {
+		logger.warn("Authentication failed: Invalid credentials");
+		ErrorMessage apiError = new ErrorMessage(
+				HttpStatus.UNAUTHORIZED.value(), new Date(),
+				"Invalid username or password");
+		return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(InvalidRoleException.class)
+	public ResponseEntity<Object> handleInvalidRoleException(
+			InvalidRoleException ex) {
+		logger.warn("Invalid role: {}", ex.getMessage());
 		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
 				new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
