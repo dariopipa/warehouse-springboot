@@ -11,6 +11,7 @@ import io.github.dariopipa.warehouse.dtos.requests.RegisterUserDTO;
 import io.github.dariopipa.warehouse.entities.Roles;
 import io.github.dariopipa.warehouse.entities.User;
 import io.github.dariopipa.warehouse.enums.RolesEnum;
+import io.github.dariopipa.warehouse.exceptions.InvalidRoleException;
 import io.github.dariopipa.warehouse.repositories.RoleRepository;
 import io.github.dariopipa.warehouse.repositories.UserRepository;
 import io.github.dariopipa.warehouse.services.interfaces.AuthService;
