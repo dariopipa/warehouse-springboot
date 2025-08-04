@@ -51,11 +51,11 @@ public class AuthServiceImpl implements AuthService {
 				try {
 					RolesEnum roleEnum = RolesEnum.valueOf(roleName);
 					Roles role = roleRepository.findByRole(roleEnum)
-							.orElseThrow(() -> new RuntimeException(
+							.orElseThrow(() -> new InvalidRoleException(
 									"Role not found: " + roleName));
 					roles.add(role);
 				} catch (IllegalArgumentException e) {
-					throw new RuntimeException(
+					throw new InvalidRoleException(
 							"Invalid role name: " + roleName);
 				}
 			}
