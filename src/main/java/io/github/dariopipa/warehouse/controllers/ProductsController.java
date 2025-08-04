@@ -1,6 +1,7 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,6 @@ import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
-import io.github.dariopipa.warehouse.enums.ProductSortByEnum;
-import io.github.dariopipa.warehouse.enums.SortDirectionEnum;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +40,7 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products")
 public class ProductsController {
 
-	private final Logger logger = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ProductsController.class);
 	private final ProductService productService;
 
@@ -112,18 +111,22 @@ public class ProductsController {
 	public PaginatedResponse<ProductGetOneResponseDTO> getProductCollection(
 			@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
-			@RequestParam(defaultValue = "name") ProductSortByEnum sortBy,
-			@RequestParam(defaultValue = "desc") SortDirectionEnum direction) {
-
+			@RequestParam(defaultValue = "name") String sortBy,
+			@RequestParam(defaultValue = "asc") String direction) {
 		logger.info(
 				"Fetching product collection - page: {}, size: {}, sortBy: {}, direction: {}",
 				page, size, sortBy, direction);
 
-		String sortColumn = sortBy.getProperty();
-		Sort.Direction sortDirection = Sort.Direction
-				.fromString(direction.name());
+		List<String> allowed = List.of("name", "createdAt", "quantity");
+		if (!allowed.contains(sortBy)) {
+			logger.warn("Invalid sortBy parameter: {}. Allowed values: {}",
+					sortBy, allowed);
 
-		Sort sort = Sort.by(sortDirection, sortColumn);
+			throw new IllegalArgumentException(
+					"sortBy must be one of: " + allowed);
+		}
+
+		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
 		Pageable pageable = PageRequest.of(page, size, sort);
 		Page<ProductGetOneResponseDTO> paginatedResponse = productService
 				.getCollection(pageable);
