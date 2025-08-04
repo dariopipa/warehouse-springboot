@@ -65,6 +65,6 @@ public class AuthServiceImpl implements AuthService {
 
 	private Roles getDefaultRole() {
 		return roleRepository.findByRole(RolesEnum.ROLE_USER).orElseThrow(
-				() -> new RuntimeException("Default role not found"));
+				() -> new InvalidRoleException("Default role not found"));
 	}
 }
