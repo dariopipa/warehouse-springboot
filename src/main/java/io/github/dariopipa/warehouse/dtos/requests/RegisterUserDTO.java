@@ -39,7 +39,7 @@ public class RegisterUserDTO {
 			@NotBlank(message = "Username is required") @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters") String username,
 			@NotBlank(message = "Email is required") @Email(message = "Email must be valid") @Size(max = 50, message = "Email must be at most 50 characters") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters") String password,
-			@NotBlank(message = "Role cannot be empty") Set<String> roles) {
+			@NotEmpty(message = "At least one role must be specified") Set<String> roles) {
 		super();
 		this.username = username;
 		this.email = email;
