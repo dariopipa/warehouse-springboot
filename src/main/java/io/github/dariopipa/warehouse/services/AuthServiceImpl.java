@@ -7,9 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.github.dariopipa.warehouse.audit.AuditLogger;
 import io.github.dariopipa.warehouse.dtos.requests.RegisterUserDTO;
 import io.github.dariopipa.warehouse.entities.Roles;
 import io.github.dariopipa.warehouse.entities.User;
+import io.github.dariopipa.warehouse.enums.AuditAction;
+import io.github.dariopipa.warehouse.enums.EntityType;
 import io.github.dariopipa.warehouse.enums.RolesEnum;
 import io.github.dariopipa.warehouse.exceptions.InvalidRoleException;
 import io.github.dariopipa.warehouse.repositories.RoleRepository;
@@ -23,12 +26,16 @@ public class AuthServiceImpl implements AuthService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final AuditLogger auditLogger;
+
 	public AuthServiceImpl(UserRepository userRepository,
 			RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+			AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+			AuditLogger auditLogger) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.auditLogger = auditLogger;
 	}
 
 	@Override
