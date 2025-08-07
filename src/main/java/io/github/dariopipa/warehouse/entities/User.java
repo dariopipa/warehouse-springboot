@@ -1,7 +1,13 @@
 package io.github.dariopipa.warehouse.entities;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +27,7 @@ import jakarta.validation.constraints.Size;
 @Table(name = "users", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "username"),
 		@UniqueConstraint(columnNames = "email")})
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -92,4 +98,10 @@ public class User {
 		this.roles = roles;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles.stream()
+				.map(role -> new SimpleGrantedAuthority(role.getRole().name()))
+				.collect(Collectors.toSet());
+	}
 }

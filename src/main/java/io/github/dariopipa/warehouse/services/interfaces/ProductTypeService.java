@@ -9,11 +9,11 @@ import io.github.dariopipa.warehouse.entities.ProductType;
 
 public interface ProductTypeService {
 
-	Long save(ProductTypesDTO productType);
+	Long save(ProductTypesDTO productType, Long loggedInUser);
 
-	void update(Long id, ProductTypesDTO productType);
+	void update(Long id, ProductTypesDTO productType, Long loggedInUser);
 
-	void delete(Long id);
+	void delete(Long id, Long loggedInUser);
 
 	Page<ProductTypeResponseDTO> getCollection(Pageable pageable);
 
