@@ -26,9 +26,9 @@ public class AuditLog {
 	@Column(nullable = false, updatable = false)
 	private Long userId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false)
-    private AuditAction action;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, updatable = false)
+	private AuditAction action;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "entity_type", nullable = false, updatable = false)

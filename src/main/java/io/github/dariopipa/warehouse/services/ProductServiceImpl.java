@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Long save(CreateProductDTO dto,Long loggedInUser) {
+	public Long save(CreateProductDTO dto, Long loggedInUser) {
 
 		logger.info("Saving new product: {}", dto.getName());
 		if (this.productRepository.existsByName(dto.getName())) {
@@ -72,8 +72,8 @@ public class ProductServiceImpl implements ProductService {
 			Product savedEntity = this.productRepository.save(productEntity);
 			logger.info("Product saved with id: {}", savedEntity.getId());
 
-			auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.PRODUCT,
-					savedEntity.getId());
+			auditLogger.log(loggedInUser, AuditAction.CREATE,
+					EntityType.PRODUCT, savedEntity.getId());
 
 			return savedEntity.getId();
 		} catch (DataIntegrityViolationException e) {
@@ -86,7 +86,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void update(Long id, UpdateProductRequestDTO updateRequestDTO,Long loggedInUser) {
+	public void update(Long id, UpdateProductRequestDTO updateRequestDTO,
+			Long loggedInUser) {
 		logger.info("Updating product with id: {}", id);
 
 		Product product = getProduct(id);
@@ -97,17 +98,19 @@ public class ProductServiceImpl implements ProductService {
 				.updateEntityFromDto(updateRequestDTO, product, productType));
 		logger.info("Product updated with id: {}", id);
 
-		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT, id);
+		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT,
+				id);
 	}
 
 	@Override
-	public void delete(Long id,Long loggedInUser) {
+	public void delete(Long id, Long loggedInUser) {
 		logger.info("Deleting product with id: {}", id);
 		Product product = getProduct(id);
 
 		this.productRepository.delete(product);
 		logger.info("Product deleted with id: {}", id);
-		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT, id);
+		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT,
+				id);
 	}
 
 	@Override
@@ -127,7 +130,8 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public void updateQuantity(Long id,
-			UpdateQuantityRequestDTO updateQuantityRequestDTO,Long loggedInUser) {
+			UpdateQuantityRequestDTO updateQuantityRequestDTO,
+			Long loggedInUser) {
 
 		logger.info(
 				"Updating quantity for product id: {} with operation: {} and quantity: {}",

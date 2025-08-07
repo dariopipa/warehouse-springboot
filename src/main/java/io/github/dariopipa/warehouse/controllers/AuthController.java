@@ -49,7 +49,8 @@ public class AuthController {
 	@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(
-			@Valid @RequestBody RegisterUserDTO request,@AuthenticationPrincipal User loggedInUser) {
+			@Valid @RequestBody RegisterUserDTO request,
+			@AuthenticationPrincipal User loggedInUser) {
 		if (userRepository.existsByUsername(request.getUsername())) {
 			throw new UserAlreadyExistsException(
 					"Username already exists: " + request.getUsername());
@@ -60,7 +61,7 @@ public class AuthController {
 					"Email already exists: " + request.getEmail());
 		}
 
-		User user = authService.registerNewUser(request,loggedInUser.getId());
+		User user = authService.registerNewUser(request, loggedInUser.getId());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(user.getId()).toUri();
 
