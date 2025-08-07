@@ -46,9 +46,10 @@ public class AuthServiceImpl implements AuthService {
 		Set<Roles> roles = assignUserRoles(request.getRoles());
 		user.setRoles(roles);
 
+		User savedUser = userRepository.save(user);
 		auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.USER,
-				user.getId());
-		return userRepository.save(user);
+				savedUser.getId());
+		return savedUser;
 	}
 
 	private Set<Roles> assignUserRoles(Set<String> roleNames) {
