@@ -38,6 +38,8 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/auth/register")
 				.hasAnyRole("ADMIN", "MANAGER")
 
+				.requestMatchers("/actuator/**").hasRole("ADMIN")
+
 				// All other endpoints require JWT authentication
 				.anyRequest().authenticated())
 

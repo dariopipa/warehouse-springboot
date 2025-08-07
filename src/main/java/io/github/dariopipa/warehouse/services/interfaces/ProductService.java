@@ -11,11 +11,11 @@ import io.github.dariopipa.warehouse.entities.Product;
 
 public interface ProductService {
 
-	Long save(CreateProductDTO product);
+	Long save(CreateProductDTO product,Long loggedInUser);
 
-	void update(Long id, UpdateProductRequestDTO product);
+	void update(Long id, UpdateProductRequestDTO product,Long loggedInUser);
 
-	void delete(Long id);
+	void delete(Long id,Long loggedInUser);
 
 	Page<ProductGetOneResponseDTO> getCollection(Pageable pageable);
 
@@ -24,5 +24,5 @@ public interface ProductService {
 	Product getProductEntityById(Long id);
 
 	void updateQuantity(Long id,
-			UpdateQuantityRequestDTO updateQuantityRequestDTO);
+			UpdateQuantityRequestDTO updateQuantityRequestDTO,Long loggedInUser);
 }

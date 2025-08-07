@@ -39,13 +39,15 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public User registerNewUser(RegisterUserDTO request) {
+	public User registerNewUser(RegisterUserDTO request, Long loggedInUser) {
 		User user = new User(request.getUsername(), request.getEmail(),
 				passwordEncoder.encode(request.getPassword()));
 
 		Set<Roles> roles = assignUserRoles(request.getRoles());
 		user.setRoles(roles);
 
+		auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.USER,
+				user.getId());
 		return userRepository.save(user);
 	}
 

@@ -5,5 +5,5 @@ import io.github.dariopipa.warehouse.entities.User;
 
 public interface AuthService {
 
-	User registerNewUser(RegisterUserDTO request);
+	User registerNewUser(RegisterUserDTO request, Long loggedInUser);
 }

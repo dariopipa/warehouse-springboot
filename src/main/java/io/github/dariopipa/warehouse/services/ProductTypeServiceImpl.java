@@ -21,11 +21,8 @@ import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 @Service
 public class ProductTypeServiceImpl implements ProductTypeService {
 
-	// REMOVE THE HARD-CODED USER WHEN AUTHENTICATION IS IMPLEMENTED.
 	private final Logger logger = LoggerFactory
 			.getLogger(ProductTypeServiceImpl.class);
-
-	private final Long USER_ID = 1L;
 	private final ProductTypeRepository productTypeRepository;
 	private final AuditLogger auditLogger;
 
@@ -53,7 +50,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 	}
 
 	@Override
-	public Long save(ProductTypesDTO dto) {
+	public Long save(ProductTypesDTO dto, Long loggedInUser) {
 		logger.info("Saving new product type: {}", dto.getName());
 
 		if (productTypeRepository.existsByName(dto.getName())) {
@@ -61,18 +58,19 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 			throw new ConflictException("Product type name already exists");
 		}
 
-		ProductType entity = ProductTypeMapper.toEntity(dto, USER_ID);
+		ProductType entity = ProductTypeMapper.toEntity(dto, loggedInUser);
 		ProductType saved = productTypeRepository.save(entity);
 
 		logger.info("Product type saved with id: {}", saved.getId());
 
-		auditLogger.log(USER_ID, AuditAction.CREATE, EntityType.PRODUCT_TYPE,
-				saved.getId());
+		auditLogger.log(loggedInUser, AuditAction.CREATE,
+				EntityType.PRODUCT_TYPE, saved.getId());
 		return saved.getId();
 	}
 
 	@Override
-	public void update(Long id, ProductTypesDTO productType) {
+	public void update(Long id, ProductTypesDTO productType,
+			Long loggedInUser) {
 		logger.info("Updating product type with id: {} and name: {}", id,
 				productType.getName());
 
@@ -88,20 +86,20 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		this.productTypeRepository.save(existingProductType);
 		logger.info("Product type updated with id: {}", id);
 
-		auditLogger.log(USER_ID, AuditAction.UPDATE, EntityType.PRODUCT_TYPE,
-				id);
+		auditLogger.log(loggedInUser, AuditAction.UPDATE,
+				EntityType.PRODUCT_TYPE, id);
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(Long id, Long loggedInUser) {
 		logger.info("Deleting product type with id: {}", id);
 
 		ProductType productType = getProductType(id);
 		this.productTypeRepository.delete(productType);
 		logger.info("Product type deleted with id: {}", id);
 
-		auditLogger.log(USER_ID, AuditAction.DELETE, EntityType.PRODUCT_TYPE,
-				id);
+		auditLogger.log(loggedInUser, AuditAction.DELETE,
+				EntityType.PRODUCT_TYPE, id);
 	}
 
 	public ProductType getProductType(Long id) {

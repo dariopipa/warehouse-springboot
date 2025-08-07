@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
+import io.github.dariopipa.warehouse.entities.User;
 import io.github.dariopipa.warehouse.services.interfaces.ProductService;
 import io.github.dariopipa.warehouse.utils.PaginationUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,11 +52,12 @@ public class ProductsController {
 
 	@PostMapping("")
 	public ResponseEntity<Void> createProduct(
+			@AuthenticationPrincipal User loggedInUser,
 			@Valid @RequestBody CreateProductDTO requestBody) {
 		logger.info("Creating new product with name: {}",
 				requestBody.getName());
 
-		Long id = this.productService.save(requestBody);
+		Long id = this.productService.save(requestBody, loggedInUser.getId());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(id).toUri();
 
@@ -75,9 +78,10 @@ public class ProductsController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteProduct(@PathVariable Long id,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info("Deleting product with id: {}", id);
-		this.productService.delete(id);
+		this.productService.delete(id, loggedInUser.getId());
 
 		logger.info("Product deleted successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
@@ -85,10 +89,11 @@ public class ProductsController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateEntity(@PathVariable Long id,
-			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO) {
+			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info("Updating product with id: {} and name: {}", id,
 				updateRequestDTO.getName());
-		this.productService.update(id, updateRequestDTO);
+		this.productService.update(id, updateRequestDTO, loggedInUser.getId());
 
 		logger.info("Product updated successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
@@ -96,13 +101,15 @@ public class ProductsController {
 
 	@PatchMapping("/{id}/quantity")
 	public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
-			@Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+			@Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info(
 				"Updating quantity for product id: {} with operation: {} and quantity: {}",
 				id, updateQuantityRequestDTO.getOperation(),
 				updateQuantityRequestDTO.getQuantity());
 
-		this.productService.updateQuantity(id, updateQuantityRequestDTO);
+		this.productService.updateQuantity(id, updateQuantityRequestDTO,
+				loggedInUser.getId());
 		logger.info("Product quantity updated successfully for id: {}", id);
 		return ResponseEntity.noContent().build();
 	}

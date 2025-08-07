@@ -1,16 +1,15 @@
 package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,9 +46,10 @@ public class AuthController {
 		this.authService = authService;
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(
-			@Valid @RequestBody RegisterUserDTO request) {
+			@Valid @RequestBody RegisterUserDTO request,@AuthenticationPrincipal User loggedInUser) {
 		if (userRepository.existsByUsername(request.getUsername())) {
 			throw new UserAlreadyExistsException(
 					"Username already exists: " + request.getUsername());
@@ -60,7 +60,7 @@ public class AuthController {
 					"Email already exists: " + request.getEmail());
 		}
 
-		User user = authService.registerNewUser(request);
+		User user = authService.registerNewUser(request,loggedInUser.getId());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(user.getId()).toUri();
 
@@ -70,24 +70,23 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> authenticateUser(
 			@Valid @RequestBody LoginRequestDTO loginRequest) {
+
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(
 						loginRequest.getUsername(),
 						loginRequest.getPassword()));
 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		User user = (User) authentication.getPrincipal();
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
-		// Get user roles for the response
-		Collection<? extends GrantedAuthority> authorities = userDetails
-				.getAuthorities();
-		List<String> roles = authorities.stream()
-				.map(GrantedAuthority::getAuthority)
+		List<String> roles = user.getRoles().stream()
+				.map(role -> role.getRole().name())
 				.collect(Collectors.toList());
 
-		JwtResponse jwtResponse = new JwtResponse(jwt,
-				userDetails.getUsername(), roles);
+		JwtResponse jwtResponse = new JwtResponse(jwt, user.getUsername(),
+				roles);
 
 		return ResponseEntity.ok(jwtResponse);
 	}
+
 }

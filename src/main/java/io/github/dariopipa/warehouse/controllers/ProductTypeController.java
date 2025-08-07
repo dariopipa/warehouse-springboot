@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import io.github.dariopipa.warehouse.dtos.requests.ProductTypesDTO;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
+import io.github.dariopipa.warehouse.entities.User;
 import io.github.dariopipa.warehouse.enums.ProductTypeSortByEnum;
 import io.github.dariopipa.warehouse.enums.SortDirectionEnum;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
@@ -91,11 +93,13 @@ public class ProductTypeController {
 
 	@PostMapping("")
 	public ResponseEntity<Void> createProductTypes(
-			@Valid @RequestBody ProductTypesDTO productType) {
+			@Valid @RequestBody ProductTypesDTO productType,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info("Creating new product type with name: {}",
 				productType.getName());
 
-		Long id = this.productTypeService.save(productType);
+		Long id = this.productTypeService.save(productType,
+				loggedInUser.getId());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(id).toUri();
 
@@ -104,9 +108,10 @@ public class ProductTypeController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info("Deleting product type with id: {}", id);
-		this.productTypeService.delete(id);
+		this.productTypeService.delete(id, loggedInUser.getId());
 
 		logger.info("Product type deleted successfully with id: {}", id);
 		return ResponseEntity.noContent().build();
@@ -114,10 +119,11 @@ public class ProductTypeController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<ProductType> updateProductTypes(@PathVariable Long id,
-			@Valid @RequestBody ProductTypesDTO productType) {
+			@Valid @RequestBody ProductTypesDTO productType,
+			@AuthenticationPrincipal User loggedInUser) {
 		logger.info("Updating product type with id: {} and name: {}", id,
 				productType.getName());
-		this.productTypeService.update(id, productType);
+		this.productTypeService.update(id, productType, loggedInUser.getId());
 
 		logger.info("Product type updated successfully with id: {}", id);
 		return ResponseEntity.noContent().build();

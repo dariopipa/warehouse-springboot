@@ -34,7 +34,6 @@ public class ProductServiceImpl implements ProductService {
 	private final Logger logger = LoggerFactory
 			.getLogger(ProductServiceImpl.class);
 
-	private final Long USER_ID = 1L;
 	private final ProductRepository productRepository;
 	private final ProductTypeService productTypeService;
 	private final SkuGeneratorService skuGeneratorService;
@@ -54,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Long save(CreateProductDTO dto) {
+	public Long save(CreateProductDTO dto,Long loggedInUser) {
 
 		logger.info("Saving new product: {}", dto.getName());
 		if (this.productRepository.existsByName(dto.getName())) {
@@ -67,13 +66,13 @@ public class ProductServiceImpl implements ProductService {
 				.getProductType(dto.getProductTypeId());
 		String generatedSku = skuGeneratorService.generateSku(dto.getName(),
 				productType.getName());
-		Product productEntity = ProductMapper.toEntity(dto, USER_ID,
+		Product productEntity = ProductMapper.toEntity(dto, loggedInUser,
 				productType, generatedSku);
 		try {
 			Product savedEntity = this.productRepository.save(productEntity);
 			logger.info("Product saved with id: {}", savedEntity.getId());
 
-			auditLogger.log(USER_ID, AuditAction.CREATE, EntityType.PRODUCT,
+			auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.PRODUCT,
 					savedEntity.getId());
 
 			return savedEntity.getId();
@@ -87,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void update(Long id, UpdateProductRequestDTO updateRequestDTO) {
+	public void update(Long id, UpdateProductRequestDTO updateRequestDTO,Long loggedInUser) {
 		logger.info("Updating product with id: {}", id);
 
 		Product product = getProduct(id);
@@ -98,17 +97,17 @@ public class ProductServiceImpl implements ProductService {
 				.updateEntityFromDto(updateRequestDTO, product, productType));
 		logger.info("Product updated with id: {}", id);
 
-		auditLogger.log(USER_ID, AuditAction.UPDATE, EntityType.PRODUCT, id);
+		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT, id);
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(Long id,Long loggedInUser) {
 		logger.info("Deleting product with id: {}", id);
 		Product product = getProduct(id);
 
 		this.productRepository.delete(product);
 		logger.info("Product deleted with id: {}", id);
-		auditLogger.log(USER_ID, AuditAction.DELETE, EntityType.PRODUCT, id);
+		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT, id);
 	}
 
 	@Override
@@ -128,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional
 	public void updateQuantity(Long id,
-			UpdateQuantityRequestDTO updateQuantityRequestDTO) {
+			UpdateQuantityRequestDTO updateQuantityRequestDTO,Long loggedInUser) {
 
 		logger.info(
 				"Updating quantity for product id: {} with operation: {} and quantity: {}",
@@ -149,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
 
 		this.productRepository.updateQuantityById(id, delta);
 		this.stockAlertService.alertStockLow(product, newQuantity);
-		this.auditLogger.logQuantityUpdate(USER_ID, EntityType.PRODUCT, id,
+		this.auditLogger.logQuantityUpdate(loggedInUser, EntityType.PRODUCT, id,
 				updateQuantityRequestDTO.getOperation(), newQuantity);
 
 		logger.info("Quantity updated for product id: {} by delta: {}", id,
