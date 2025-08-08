@@ -1,6 +1,7 @@
 package io.github.dariopipa.warehouse.services;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,5 +78,10 @@ public class AuthServiceImpl implements AuthService {
 	private Roles getDefaultRole() {
 		return roleRepository.findByRole(RolesEnum.ROLE_USER).orElseThrow(
 				() -> new InvalidRoleException("Default role not found"));
+	}
+
+	@Override
+	public List<String> findEmailsByRole(RolesEnum role) {
+	    return userRepository.findEmailsByRole(role);
 	}
 }

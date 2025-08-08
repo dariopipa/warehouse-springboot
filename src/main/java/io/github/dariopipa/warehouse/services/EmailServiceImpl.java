@@ -22,8 +22,6 @@ public class EmailServiceImpl implements EmailService {
 		this.javaMailSender = javaMailSender;
 	}
 
-	// TODO: MAKE THE SENDING OF EMAILS TO ACTUALLY ALLOW BULK SENDING BY
-	// CHANGING THE HELPER
 	@Override
 	public void sendEmail(SendEmailDTO emailDTO) {
 
@@ -33,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
 
 			helper.setFrom(
 					new InternetAddress(emailDTO.getFrom(), "Warehouse App"));
-			helper.setTo(emailDTO.getTo());
+			helper.setBcc(emailDTO.getTo().toArray(new String[0]));
 			helper.setSubject(emailDTO.getSubject());
 			helper.setText(emailDTO.getBody(), true);
 
