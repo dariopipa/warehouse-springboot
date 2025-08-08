@@ -8,6 +8,8 @@ RUN mvn dependency:go-offline
 
 COPY . .
 
+RUN mvn -B -DskipTests package
+
 RUN mv target/*.jar target/app.jar
 
 CMD ["java", "-jar", "target/app.jar"]
