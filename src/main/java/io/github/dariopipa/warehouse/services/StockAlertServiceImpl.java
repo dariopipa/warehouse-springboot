@@ -1,5 +1,7 @@
 package io.github.dariopipa.warehouse.services;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Service;
 import io.github.dariopipa.warehouse.dtos.requests.SendEmailDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 import io.github.dariopipa.warehouse.entities.StockAlert;
+import io.github.dariopipa.warehouse.enums.RolesEnum;
 import io.github.dariopipa.warehouse.repositories.StockAlertRepository;
+import io.github.dariopipa.warehouse.services.interfaces.AuthService;
 import io.github.dariopipa.warehouse.services.interfaces.EmailService;
 import io.github.dariopipa.warehouse.services.interfaces.StockAlertService;
 
@@ -19,14 +23,16 @@ public class StockAlertServiceImpl implements StockAlertService {
 	private String DEFAULT_COMPANY_EMAIL;
 	private final StockAlertRepository stockAlertRepository;
 	private final EmailService emailService;
+	private final AuthService authService;
 
 	private final Logger logger = LoggerFactory
 			.getLogger(StockAlertServiceImpl.class);
 
 	public StockAlertServiceImpl(StockAlertRepository stockAlertRepository,
-			EmailService emailService) {
+			EmailService emailService, AuthService authService) {
 		this.stockAlertRepository = stockAlertRepository;
 		this.emailService = emailService;
+		this.authService = authService;
 	}
 
 	@Override
@@ -53,8 +59,12 @@ public class StockAlertServiceImpl implements StockAlertService {
 
 	private boolean sendLowStockEmail(Product product, int currentQuantity) {
 		try {
+
+			List<String> recipients = authService
+					.findEmailsByRole(RolesEnum.ROLE_MANAGER);
+
 			SendEmailDTO emailDTO = createLowStockEmailDTO(product,
-					currentQuantity);
+					currentQuantity, recipients);
 			emailService.sendEmail(emailDTO);
 
 			logger.info(
@@ -71,16 +81,13 @@ public class StockAlertServiceImpl implements StockAlertService {
 	}
 
 	private SendEmailDTO createLowStockEmailDTO(Product product,
-			int currentQuantity) {
+			int currentQuantity, List<String> recipients) {
+
 		SendEmailDTO emailDTO = new SendEmailDTO();
-		// Change this to send msg to multiple managers/admins
-		emailDTO.setTo("manager@warehouse.com");
+		emailDTO.setTo(recipients);
 		emailDTO.setFrom(DEFAULT_COMPANY_EMAIL);
 		emailDTO.setSubject("Low Stock Alert: " + product.getName());
-		emailDTO.setBody(String.format(
-				"Warning: The stock for product '%s' is low!\n\nCurrent quantity: %d\nThreshold: %d",
-				product.getName(), currentQuantity,
-				product.getLowStockThreshold()));
+		emailDTO.setBody(createEmailBody(product, currentQuantity));
 		return emailDTO;
 	}
 
@@ -92,5 +99,17 @@ public class StockAlertServiceImpl implements StockAlertService {
 		stockAlertRepository.save(alert);
 		logger.info("Stock alert saved for product '{}' with emailSent={}",
 				product.getName(), emailSent);
+	}
+
+	private String createEmailBody(Product product, int currentQuantity) {
+		return String.format("""
+				Warning: The stock for product '%s' is low!
+
+				Current quantity: %d
+				Threshold: %d
+
+				Please restock as soon as possible.
+				""", product.getName(), currentQuantity,
+				product.getLowStockThreshold());
 	}
 }
