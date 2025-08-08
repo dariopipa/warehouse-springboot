@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY pom.xml .
 
-#Caches the pom.xml dependecies so in other builds it doesnt have to take that long.
+#Caches the pom.xml dependencies so in other builds it doesnt have to take that long.
 RUN mvn dependency:go-offline
 
 COPY . .
