@@ -1,5 +1,8 @@
 package io.github.dariopipa.warehouse.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 
 import org.slf4j.Logger;
@@ -70,6 +73,18 @@ public class ProductTypeController {
 		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
 				.getCollection(pageable);
 
+		paginatedResponse.forEach(p -> p.add(
+				linkTo(methodOn(ProductTypeController.class)
+						.getProductType(p.getId())).withSelfRel(),
+
+				linkTo(methodOn(ProductTypeController.class)
+						.updateProductTypes(p.getId(), null, null))
+						.withRel("update"),
+
+				linkTo(methodOn(ProductTypeController.class)
+						.deleteProductTypes(p.getId(), null))
+						.withRel("delete")));
+
 		logger.debug(
 				"Product types collection retrieved successfully - total elements: {}",
 				paginatedResponse.getTotalElements());
@@ -84,6 +99,21 @@ public class ProductTypeController {
 
 		ProductTypeResponseDTO productType = this.productTypeService
 				.getById(id);
+
+		productType.add(
+
+				linkTo(methodOn(ProductTypeController.class).getProductType(id))
+						.withSelfRel(),
+
+				linkTo(methodOn(ProductTypeController.class).getProductTypes(0,
+						10, ProductTypeSortByEnum.name, SortDirectionEnum.asc))
+						.withRel("collection"),
+
+				linkTo(methodOn(ProductTypeController.class)
+						.updateProductTypes(id, null, null)).withRel("update"),
+
+				linkTo(methodOn(ProductTypeController.class)
+						.deleteProductTypes(id, null)).withRel("delete"));
 
 		logger.debug("Product type retrieved successfully: {}",
 				productType.getName());

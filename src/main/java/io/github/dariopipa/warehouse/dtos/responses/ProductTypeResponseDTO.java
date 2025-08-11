@@ -2,12 +2,16 @@ package io.github.dariopipa.warehouse.dtos.responses;
 
 import java.time.Instant;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class ProductTypeResponseDTO {
+public class ProductTypeResponseDTO
+		extends
+			RepresentationModel<ProductTypeResponseDTO> {
 
 	@NotBlank(message = "Id is required")
 	private Long id;
