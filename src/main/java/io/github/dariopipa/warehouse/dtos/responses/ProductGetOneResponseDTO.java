@@ -2,7 +2,11 @@ package io.github.dariopipa.warehouse.dtos.responses;
 
 import java.time.Instant;
 
-public class ProductGetOneResponseDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class ProductGetOneResponseDTO
+		extends
+			RepresentationModel<ProductGetOneResponseDTO> {
 
 	private Long id;
 	private String sku;
