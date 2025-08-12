@@ -3,7 +3,7 @@ name: Warehouse
 
 services:
    backend:
-      build: .
+      image: warehouse-spring
       container_name: springboot-app
       env_file:
       - .env
@@ -25,7 +25,7 @@ services:
          POSTGRES_PASSWORD: ${DB_PASSWORD}
          POSTGRES_DB: ${DB_NAME}
       ports:
-          - 5432:5432
+      - 5432:5432
       volumes:
       - warehousedb_data:/var/lib/postgresql/data
       healthcheck:
