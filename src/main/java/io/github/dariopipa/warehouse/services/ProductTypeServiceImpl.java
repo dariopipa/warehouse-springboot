@@ -102,6 +102,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 				EntityType.PRODUCT_TYPE, id);
 	}
 
+	@Override
 	public ProductType getProductType(Long id) {
 		logger.debug("Retrieving product type with id: {}", id);
 

@@ -69,7 +69,7 @@ public class PaginatedResponse<T> {
 	}
 
 	public PaginatedResponse() {
-	};
+	}
 
 	public PaginatedResponse(List<T> data, int currentPage, int totalPages,
 			long totalItems, int pageSize, boolean hasNext,

@@ -29,28 +29,23 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
 
 				// Only login is public
-				.requestMatchers("/api/v1/auth/login", "/swagger-ui/**",
-						"/swagger-ui.html", "/v3/api-docs/**",
+				.requestMatchers("/api/v1/auth/login", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
 						"/v1/api-docs/**")
 				.permitAll()
 
 				// Register requires ADMIN or MANAGER roles
-				.requestMatchers("/api/v1/auth/register")
-				.hasAnyRole("ADMIN", "MANAGER")
+				.requestMatchers("/api/v1/auth/register").hasAnyRole("ADMIN", "MANAGER")
 
 				.requestMatchers("/actuator/**").hasRole("ADMIN")
 
 				// All other endpoints require JWT authentication
 				.anyRequest().authenticated())
 
-				.sessionManagement(sess -> sess
-						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-				.formLogin(form -> form.disable())
-				.httpBasic(basic -> basic.disable());
+				.formLogin(form -> form.disable()).httpBasic(basic -> basic.disable());
 
-		http.addFilterBefore(jwtAuthFilter,
-				UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
@@ -61,8 +56,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	AuthenticationManager authenticationManager(
-			AuthenticationConfiguration config) throws Exception {
+	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 }
