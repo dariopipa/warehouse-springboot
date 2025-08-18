@@ -88,7 +88,7 @@ class StockAlertServiceImplTest {
                 email.getBody().contains("Current quantity: 5") &&
                 email.getBody().contains("Threshold: 10")));
         verify(stockAlertRepository, times(1)).save(argThat(alert -> alert.getProduct().equals(product) &&
-                alert.getEmailSent() == true));
+                alert.getEmailSent()));
     }
 
     @Test
