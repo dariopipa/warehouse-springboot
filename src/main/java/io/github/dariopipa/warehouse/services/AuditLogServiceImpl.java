@@ -15,7 +15,7 @@ public class AuditLogServiceImpl implements AuditLogService {
 	private final AuditLogRepository auditLogRepository;
 	public AuditLogServiceImpl(AuditLogRepository auditLogRepository) {
 		this.auditLogRepository = auditLogRepository;
-	};
+	}
 
 	@Override
 	public void save(AuditLogEvent event) {

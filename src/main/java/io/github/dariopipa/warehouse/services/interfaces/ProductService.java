@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import io.github.dariopipa.warehouse.dtos.requests.CreateProductDTO;
-import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.requests.UpdateProductRequestDTO;
+import io.github.dariopipa.warehouse.dtos.requests.UpdateQuantityRequestDTO;
 import io.github.dariopipa.warehouse.dtos.responses.ProductGetOneResponseDTO;
 import io.github.dariopipa.warehouse.entities.Product;
 
