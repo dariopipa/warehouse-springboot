@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -59,14 +60,30 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler({ConstraintViolationException.class,
-			MethodArgumentTypeMismatchException.class})
+	@ExceptionHandler({ ConstraintViolationException.class,
+			MethodArgumentTypeMismatchException.class })
 	public ResponseEntity<Object> handleConstraintViolation(
 			ConstraintViolationException ex) {
 		logger.warn("Validation constraint violated: {}", ex.getMessage());
 
 		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
 				new Date(), ex.getMessage());
+		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Object> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException ex) {
+		logger.warn("Method argument validation failed: {}", ex.getMessage());
+
+		String errorMessage = "Validation failed";
+		if (ex.getBindingResult().hasFieldErrors()) {
+			errorMessage = ex.getBindingResult().getFieldErrors().get(0)
+					.getDefaultMessage();
+		}
+
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+				new Date(), errorMessage);
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 

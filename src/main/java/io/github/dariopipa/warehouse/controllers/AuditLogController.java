@@ -23,7 +23,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
-@RequestMapping("/v1/api/audit-logs")
+@RequestMapping("/api/v1/audit-logs")
 @Tag(name = "Audit Logs")
 @PreAuthorize("hasRole('ADMIN')")
 public class AuditLogController {
