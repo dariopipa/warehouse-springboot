@@ -89,7 +89,7 @@ class AuditLogServiceImplTest {
     }
 
     @Test
-    void test_FindAll_WithDifferentPaginationParamas_ShouldCallRepository() {
+    void test_FindAll_WithDifferentPaginationParameters_ShouldCallRepository() {
         Pageable pageable = PageRequest.of(1, 5);
         Page<AuditLog> expectedPage = new PageImpl<>(List.of());
 
