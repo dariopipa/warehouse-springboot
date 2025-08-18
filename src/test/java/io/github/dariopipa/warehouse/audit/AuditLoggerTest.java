@@ -56,7 +56,7 @@ class AuditLoggerTest {
     }
 
     @Test
-    void testLog_WithDeleteAction_ShouldRReturnTheCorrectMessage() {
+    void testLog_WithDeleteAction_ShouldReturnTheCorrectMessage() {
         auditLogger.log(userId, AuditAction.DELETE, EntityType.PRODUCT, entityId);
 
         verify(publisher, times(1)).publishEvent(
