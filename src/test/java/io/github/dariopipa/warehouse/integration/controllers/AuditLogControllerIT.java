@@ -124,7 +124,7 @@ class AuditLogControllerIT {
     }
 
     @Test
-    void test_AuditLogFiltering_ByAction_ShouldOnlyReturnCorrectedFilteredLogs() {
+    void test_AuditLogFiltering_ByAction_ShouldOnlyReturnCorrectlyFilteredLogs() {
         createProductTypeViaService("FilterTestType-" + System.currentTimeMillis());
 
         HttpHeaders headers = createAuthHeaders(adminJwtToken);
