@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ import io.github.dariopipa.warehouse.exceptions.InvalidRoleException;
 import io.github.dariopipa.warehouse.repositories.RoleRepository;
 import io.github.dariopipa.warehouse.repositories.UserRepository;
 import io.github.dariopipa.warehouse.services.interfaces.AuthService;
-import io.github.dariopipa.warehouse.utils.JwtUtils;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -30,8 +28,7 @@ public class AuthServiceImpl implements AuthService {
 	private final AuditLogger auditLogger;
 
 	public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-			AuditLogger auditLogger) {
+			PasswordEncoder passwordEncoder, AuditLogger auditLogger) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
