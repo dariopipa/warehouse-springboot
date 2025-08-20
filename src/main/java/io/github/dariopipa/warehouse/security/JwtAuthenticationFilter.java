@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtUtils jwtUtils;
 	private final UserDetailsService userDetailsService;
-	private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+	private final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
 	public JwtAuthenticationFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
 		this.jwtUtils = jwtUtils;
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			try {
 				username = jwtUtils.getUsernameFromToken(token);
 			} catch (Exception e) {
-				logger.error("Cannot get username or id from token: {}", e.getMessage());
+				log.error("Cannot get username or id from token: {}", e.getMessage());
 			}
 		}
 
