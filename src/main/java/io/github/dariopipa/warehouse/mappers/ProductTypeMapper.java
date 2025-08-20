@@ -6,6 +6,10 @@ import io.github.dariopipa.warehouse.entities.ProductType;
 
 public class ProductTypeMapper {
 
+	private ProductTypeMapper() {
+		super();
+	}
+
 	public static ProductType toEntity(ProductTypesDTO dto, Long userId) {
 		ProductType entity = new ProductType();
 		entity.setName(dto.getName());

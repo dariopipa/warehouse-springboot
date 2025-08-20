@@ -8,6 +8,10 @@ import io.github.dariopipa.warehouse.entities.ProductType;
 
 public class ProductMapper {
 
+	private ProductMapper() {
+		super();
+	}
+
 	public static Product toEntity(CreateProductDTO dto, Long userId, ProductType productType, String generatedSku) {
 		Product product = new Product();
 

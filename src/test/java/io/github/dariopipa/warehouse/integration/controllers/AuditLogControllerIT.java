@@ -115,8 +115,8 @@ class AuditLogControllerIT {
 		assertThat(auditLogs).hasSize(1);
 
 		AuditLog auditLog = auditLogs.get(0);
-		assertThat(auditLog.getAction().toString()).isEqualTo("CREATE");
-		assertThat(auditLog.getEntityType().toString()).isEqualTo("PRODUCT_TYPE");
+		assertThat(auditLog.getAction().toString()).hasToString("CREATE");
+		assertThat(auditLog.getEntityType().toString()).hasToString("PRODUCT_TYPE");
 		assertThat(auditLog.getEntityId()).isEqualTo(productTypeId);
 		assertThat(auditLog.getUserId()).isEqualTo(testUserId);
 		assertThat(auditLog.getDetails()).contains("product_type");

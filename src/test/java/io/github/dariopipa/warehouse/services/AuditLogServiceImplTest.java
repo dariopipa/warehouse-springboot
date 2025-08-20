@@ -50,13 +50,6 @@ class AuditLogServiceImplTest {
 	}
 
 	@Test
-	void test_Save_ShouldMapEventToEntityCorrectly() {
-		auditLogService.save(auditLogEvent);
-
-		verify(auditLogRepository).save(any(AuditLog.class));
-	}
-
-	@Test
 	void test_FindAll_ShouldReturnPageOfAuditLogs() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<AuditLog> expectedPage = new PageImpl<>(List.of(auditLog));

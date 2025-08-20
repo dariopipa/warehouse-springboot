@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -87,41 +86,41 @@ class AuthControllerTest {
 
 	@Test
 	void test_registerUser_ShouldCallService_WhenTheDTOIsValid() {
-		when(userRepository.existsByUsername(eq(registerUserDTO.getUsername()))).thenReturn(false);
-		when(userRepository.existsByEmail(eq(registerUserDTO.getEmail()))).thenReturn(false);
-		when(authService.registerNewUser(eq(registerUserDTO), eq(loggedInUser.getId()))).thenReturn(testUser);
+		when(userRepository.existsByUsername(registerUserDTO.getUsername())).thenReturn(false);
+		when(userRepository.existsByEmail(registerUserDTO.getEmail())).thenReturn(false);
+		when(authService.registerNewUser(registerUserDTO, loggedInUser.getId())).thenReturn(testUser);
 
 		assertThrows(IllegalStateException.class, () -> {
 			authController.registerUser(registerUserDTO, loggedInUser);
 		});
 
-		verify(userRepository).existsByUsername(eq(registerUserDTO.getUsername()));
-		verify(userRepository).existsByEmail(eq(registerUserDTO.getEmail()));
-		verify(authService).registerNewUser(eq(registerUserDTO), eq(loggedInUser.getId()));
+		verify(userRepository).existsByUsername(registerUserDTO.getUsername());
+		verify(userRepository).existsByEmail(registerUserDTO.getEmail());
+		verify(authService).registerNewUser(registerUserDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_registerUser_ShouldThrowException_WhenUserWithUsernameExists() {
-		when(userRepository.existsByUsername(eq(registerUserDTO.getUsername()))).thenReturn(true);
+		when(userRepository.existsByUsername(registerUserDTO.getUsername())).thenReturn(true);
 
 		assertThrows(UserAlreadyExistsException.class, () -> {
 			authController.registerUser(registerUserDTO, loggedInUser);
 		});
 
-		verify(userRepository).existsByUsername(eq(registerUserDTO.getUsername()));
+		verify(userRepository).existsByUsername(registerUserDTO.getUsername());
 	}
 
 	@Test
 	void test_registerUser_ShouldThrowException_WhenUserWithEmailExists() {
-		when(userRepository.existsByUsername(eq(registerUserDTO.getUsername()))).thenReturn(false);
-		when(userRepository.existsByEmail(eq(registerUserDTO.getEmail()))).thenReturn(true);
+		when(userRepository.existsByUsername(registerUserDTO.getUsername())).thenReturn(false);
+		when(userRepository.existsByEmail(registerUserDTO.getEmail())).thenReturn(true);
 
 		assertThrows(UserAlreadyExistsException.class, () -> {
 			authController.registerUser(registerUserDTO, loggedInUser);
 		});
 
-		verify(userRepository).existsByUsername(eq(registerUserDTO.getUsername()));
-		verify(userRepository).existsByEmail(eq(registerUserDTO.getEmail()));
+		verify(userRepository).existsByUsername(registerUserDTO.getUsername());
+		verify(userRepository).existsByEmail(registerUserDTO.getEmail());
 	}
 
 	@Test
@@ -133,7 +132,7 @@ class AuthControllerTest {
 		when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
 				.thenReturn(authentication);
 		when(authentication.getPrincipal()).thenReturn(testUser);
-		when(jwtUtils.generateJwtToken(eq(authentication))).thenReturn(jwtToken);
+		when(jwtUtils.generateJwtToken(authentication)).thenReturn(jwtToken);
 
 		ResponseEntity<JwtResponse> response = authController.authenticateUser(loginRequestDTO);
 
@@ -147,7 +146,7 @@ class AuthControllerTest {
 		assertEquals(roles, responseBody.getRoles());
 
 		verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-		verify(jwtUtils).generateJwtToken(eq(authentication));
+		verify(jwtUtils).generateJwtToken(authentication);
 	}
 
 	@Test
@@ -168,7 +167,7 @@ class AuthControllerTest {
 		when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
 				.thenReturn(authentication);
 		when(authentication.getPrincipal()).thenReturn(multiRoleUser);
-		when(jwtUtils.generateJwtToken(eq(authentication))).thenReturn(jwtToken);
+		when(jwtUtils.generateJwtToken(authentication)).thenReturn(jwtToken);
 
 		ResponseEntity<JwtResponse> response = authController.authenticateUser(loginRequestDTO);
 
@@ -181,6 +180,6 @@ class AuthControllerTest {
 		assertEquals(2, responseBody.getRoles().size());
 
 		verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-		verify(jwtUtils).generateJwtToken(eq(authentication));
+		verify(jwtUtils).generateJwtToken(authentication);
 	}
 }

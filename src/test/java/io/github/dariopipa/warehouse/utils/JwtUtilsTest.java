@@ -1,5 +1,6 @@
 package io.github.dariopipa.warehouse.utils;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -99,7 +100,7 @@ class JwtUtilsTest {
 		String token1 = jwtUtils.generateJwtToken(user1Token);
 		String token2 = jwtUtils.generateJwtToken(user2Token);
 
-		assertFalse(token1.equals(token2));
+		assertNotEquals(token1, token2);
 		assertEquals("user1", jwtUtils.getUsernameFromToken(token1));
 		assertEquals("user2", jwtUtils.getUsernameFromToken(token2));
 	}

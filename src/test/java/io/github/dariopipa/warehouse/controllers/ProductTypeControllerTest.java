@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -74,53 +73,53 @@ class ProductTypeControllerTest {
 
 	@Test
 	void test_CreateProductTypes_ShouldCallService_WhenRequestDtoIsValid() {
-		when(productTypeService.save(eq(productTypesDTO), eq(loggedInUser.getId()))).thenReturn(productTypeId);
+		when(productTypeService.save(productTypesDTO, loggedInUser.getId())).thenReturn(productTypeId);
 
 		assertThrows(IllegalStateException.class, () -> {
 			productTypeController.createProductTypes(productTypesDTO, loggedInUser);
 		});
 
-		verify(productTypeService).save(eq(productTypesDTO), eq(loggedInUser.getId()));
+		verify(productTypeService).save(productTypesDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_CreateProductTypes_ShouldThrowException_ProductTypeAlreadyExists() {
 		productTypesDTO.setName("Existing Type");
 
-		when(productTypeService.save(eq(productTypesDTO), eq(loggedInUser.getId())))
+		when(productTypeService.save(productTypesDTO, loggedInUser.getId()))
 				.thenThrow(new ConflictException("Product type already exists"));
 
 		assertThrows(ConflictException.class, () -> {
 			productTypeController.createProductTypes(productTypesDTO, loggedInUser);
 		});
 
-		verify(productTypeService).save(eq(productTypesDTO), eq(loggedInUser.getId()));
+		verify(productTypeService).save(productTypesDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_GetProductType_ShouldReturnProductType_WhenProductTypeExists() {
-		when(productTypeService.getById(eq(productTypeId))).thenReturn(productTypeResponseDTO);
+		when(productTypeService.getById(productTypeId)).thenReturn(productTypeResponseDTO);
 
 		ResponseEntity<ProductTypeResponseDTO> response = productTypeController.getProductType(productTypeId);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(productTypeResponseDTO, response.getBody());
-		verify(productTypeService).getById(eq(productTypeId));
+		verify(productTypeService).getById(productTypeId);
 	}
 
 	@Test
 	void test_GetProductType_ShouldThrowException_WhenProductTypeDoesNotExist() {
 		Long nonExistentProductTypeId = 999L;
 
-		when(productTypeService.getById(eq(nonExistentProductTypeId)))
+		when(productTypeService.getById(nonExistentProductTypeId))
 				.thenThrow(new EntityNotFoundException("Product type not found"));
 
 		assertThrows(EntityNotFoundException.class, () -> {
 			productTypeController.getProductType(nonExistentProductTypeId);
 		});
 
-		verify(productTypeService).getById(eq(nonExistentProductTypeId));
+		verify(productTypeService).getById(nonExistentProductTypeId);
 	}
 
 	@Test
@@ -142,13 +141,13 @@ class ProductTypeControllerTest {
 
 	@Test
 	void test_DeleteProductTypes_ShouldReturnNoContent_WhenProductTypeExists() {
-		doNothing().when(productTypeService).delete(eq(productTypeId), eq(loggedInUser.getId()));
+		doNothing().when(productTypeService).delete(productTypeId, loggedInUser.getId());
 
 		ResponseEntity<Void> response = productTypeController.deleteProductTypes(productTypeId, loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productTypeService).delete(eq(productTypeId), eq(loggedInUser.getId()));
+		verify(productTypeService).delete(productTypeId, loggedInUser.getId());
 	}
 
 	@Test
@@ -156,13 +155,13 @@ class ProductTypeControllerTest {
 		Long nonExistentProductTypeId = 999L;
 
 		doThrow(new EntityNotFoundException("Product type not found")).when(productTypeService)
-				.delete(eq(nonExistentProductTypeId), eq(loggedInUser.getId()));
+				.delete(nonExistentProductTypeId, loggedInUser.getId());
 
 		assertThrows(EntityNotFoundException.class, () -> {
 			productTypeController.deleteProductTypes(nonExistentProductTypeId, loggedInUser);
 		});
 
-		verify(productTypeService).delete(eq(nonExistentProductTypeId), eq(loggedInUser.getId()));
+		verify(productTypeService).delete(nonExistentProductTypeId, loggedInUser.getId());
 	}
 
 	@Test
@@ -170,14 +169,14 @@ class ProductTypeControllerTest {
 		ProductTypesDTO updateDTO = new ProductTypesDTO();
 		updateDTO.setName("Updated Electronics");
 
-		doNothing().when(productTypeService).update(eq(productTypeId), eq(updateDTO), eq(loggedInUser.getId()));
+		doNothing().when(productTypeService).update(productTypeId, updateDTO, loggedInUser.getId());
 
 		ResponseEntity<ProductType> response = productTypeController.updateProductTypes(productTypeId, updateDTO,
 				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productTypeService).update(eq(productTypeId), eq(updateDTO), eq(loggedInUser.getId()));
+		verify(productTypeService).update(productTypeId, updateDTO, loggedInUser.getId());
 	}
 
 	private ProductTypeResponseDTO createProductTypeResponseDTO(Long id, String name) {

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -90,53 +89,52 @@ class ProductsControllerTest {
 
 	@Test
 	void test_CreateProduct_ShouldCallService_DTOIsValid() {
-		when(productService.save(eq(createProductDTO), eq(loggedInUser.getId()))).thenReturn(productId);
+		when(productService.save(createProductDTO, loggedInUser.getId())).thenReturn(productId);
 
 		assertThrows(IllegalStateException.class, () -> {
 			productsController.createProduct(loggedInUser, createProductDTO);
 		});
 
-		verify(productService).save(eq(createProductDTO), eq(loggedInUser.getId()));
+		verify(productService).save(createProductDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_CreateProduct_ShouldThrowException_WhenProductAlreadyExists() {
 		createProductDTO.setName("Existing Product");
 
-		when(productService.save(eq(createProductDTO), eq(loggedInUser.getId())))
+		when(productService.save(createProductDTO, loggedInUser.getId()))
 				.thenThrow(new ConflictException("Product already exists"));
 
 		assertThrows(ConflictException.class, () -> {
 			productsController.createProduct(loggedInUser, createProductDTO);
 		});
 
-		verify(productService).save(eq(createProductDTO), eq(loggedInUser.getId()));
+		verify(productService).save(createProductDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_GetProduct_ShouldReturnProduct_WhenProductExists() {
-		when(productService.getById(eq(productId))).thenReturn(productResponseDTO);
+		when(productService.getById(productId)).thenReturn(productResponseDTO);
 
 		ResponseEntity<ProductGetOneResponseDTO> response = productsController.getProduct(productId);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(productResponseDTO, response.getBody());
-		verify(productService).getById(eq(productId));
+		verify(productService).getById(productId);
 	}
 
 	@Test
 	void test_GetProduct_ShouldThrowException_WhenProductDoesNotExist() {
 		Long nonExistentProductId = 999L;
 
-		when(productService.getById(eq(nonExistentProductId)))
-				.thenThrow(new EntityNotFoundException("Product not found"));
+		when(productService.getById(nonExistentProductId)).thenThrow(new EntityNotFoundException("Product not found"));
 
 		assertThrows(EntityNotFoundException.class, () -> {
 			productsController.getProduct(nonExistentProductId);
 		});
 
-		verify(productService).getById(eq(nonExistentProductId));
+		verify(productService).getById(nonExistentProductId);
 	}
 
 	@Test
@@ -158,52 +156,51 @@ class ProductsControllerTest {
 
 	@Test
 	void test_DeleteProduct_ShouldReturnNoContent_WhenProductExists() {
-		doNothing().when(productService).delete(eq(productId), eq(loggedInUser.getId()));
+		doNothing().when(productService).delete(productId, loggedInUser.getId());
 
 		ResponseEntity<Void> response = productsController.deleteProduct(productId, loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productService).delete(eq(productId), eq(loggedInUser.getId()));
+		verify(productService).delete(productId, loggedInUser.getId());
 	}
 
 	@Test
 	void test_DeleteProduct_ShouldThrowException_WhenProductDoesNotExist() {
 		Long nonExistentProductId = 999L;
 
-		doThrow(new EntityNotFoundException("Product not found")).when(productService).delete(eq(nonExistentProductId),
-				eq(loggedInUser.getId()));
+		doThrow(new EntityNotFoundException("Product not found")).when(productService).delete(nonExistentProductId,
+				loggedInUser.getId());
 
 		assertThrows(EntityNotFoundException.class, () -> {
 			productsController.deleteProduct(nonExistentProductId, loggedInUser);
 		});
 
-		verify(productService).delete(eq(nonExistentProductId), eq(loggedInUser.getId()));
+		verify(productService).delete(nonExistentProductId, loggedInUser.getId());
 	}
 
 	@Test
 	void test_UpdateProduct_ShouldReturnNoContent_WhenCreatingNewProduct() {
-		doNothing().when(productService).update(eq(productId), eq(updateProductRequestDTO), eq(loggedInUser.getId()));
+		doNothing().when(productService).update(productId, updateProductRequestDTO, loggedInUser.getId());
 
 		ResponseEntity<Void> response = productsController.updateEntity(productId, updateProductRequestDTO,
 				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productService).update(eq(productId), eq(updateProductRequestDTO), eq(loggedInUser.getId()));
+		verify(productService).update(productId, updateProductRequestDTO, loggedInUser.getId());
 	}
 
 	@Test
 	void test_UpdateProductQuantity_ShouldReturnNoContent_WhenCreationFails() {
-		doNothing().when(productService).updateQuantity(eq(productId), eq(updateQuantityRequestDTO),
-				eq(loggedInUser.getId()));
+		doNothing().when(productService).updateQuantity(productId, updateQuantityRequestDTO, loggedInUser.getId());
 
 		ResponseEntity<Void> response = productsController.updateProductQuantity(productId, updateQuantityRequestDTO,
 				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productService).updateQuantity(eq(productId), eq(updateQuantityRequestDTO), eq(loggedInUser.getId()));
+		verify(productService).updateQuantity(productId, updateQuantityRequestDTO, loggedInUser.getId());
 	}
 
 	private ProductGetOneResponseDTO createProductResponseDTO(Long id, String name) {
