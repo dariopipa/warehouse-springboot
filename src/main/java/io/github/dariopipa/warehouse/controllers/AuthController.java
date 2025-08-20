@@ -2,7 +2,7 @@ package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +47,7 @@ public class AuthController {
 
 	@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDTO request,
+	public ResponseEntity<Void> registerUser(@Valid @RequestBody RegisterUserDTO request,
 			@AuthenticationPrincipal User loggedInUser) {
 		if (userRepository.existsByUsername(request.getUsername())) {
 			throw new UserAlreadyExistsException("Username already exists: " + request.getUsername());
@@ -73,7 +73,7 @@ public class AuthController {
 		User user = (User) authentication.getPrincipal();
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
-		List<String> roles = user.getRoles().stream().map(role -> role.getRole().name()).collect(Collectors.toList());
+		List<String> roles = user.getRoles().stream().map(role -> role.getRole().name()).toList();
 
 		JwtResponse jwtResponse = new JwtResponse(jwt, user.getUsername(), roles);
 
