@@ -32,9 +32,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build & analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B -U clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        run: mvn -B -U clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
       - name: Build image with Maven profile
         run: mvn -B -DskipTests -P docker package
