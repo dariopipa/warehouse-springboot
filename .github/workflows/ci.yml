@@ -30,8 +30,8 @@ jobs:
       - name: Health check
         run: |
           docker compose up -d
-          sleep 100
-          curl -f http://localhost:6565/api/health
+          sleep 30
+          curl -f http://localhost:6565/swagger-ui/index.html#/
 
       - name: Stop compose
         if: always()
