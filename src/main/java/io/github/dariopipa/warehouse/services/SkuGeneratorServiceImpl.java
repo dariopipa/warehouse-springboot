@@ -11,23 +11,19 @@ import io.github.dariopipa.warehouse.services.interfaces.SkuGeneratorService;
 @Service
 public class SkuGeneratorServiceImpl implements SkuGeneratorService {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(SkuGeneratorServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SkuGeneratorServiceImpl.class);
 
 	@Override
 	public String generateSku(String productName, String productTypeName) {
-		logger.info("Generating SKU for product: {} and type: {}", productName,
-				productTypeName);
+		logger.info("Generating SKU for product: {} and type: {}", productName, productTypeName);
 
-		String prefixFromProductName = productName.substring(0, 2)
-				.toUpperCase();
-		String prefixFromProductTypeName = productTypeName.substring(0, 2)
-				.toUpperCase();
+		String prefixFromProductName = productName.substring(0, 2).toUpperCase();
+		String prefixFromProductTypeName = productTypeName.substring(0, 2).toUpperCase();
 
 		int currentYear = LocalDate.now().getYear();
 		long timestamp = System.currentTimeMillis() % 100_000;
-		String sku = String.format("%s-%s-%d-%05d", prefixFromProductName,
-				prefixFromProductTypeName, currentYear, timestamp);
+		String sku = String.format("%s-%s-%d-%05d", prefixFromProductName, prefixFromProductTypeName, currentYear,
+				timestamp);
 
 		logger.debug("Generated SKU: {}", sku);
 		return sku;

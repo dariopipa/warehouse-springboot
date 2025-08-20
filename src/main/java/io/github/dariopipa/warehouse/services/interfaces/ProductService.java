@@ -23,7 +23,5 @@ public interface ProductService {
 
 	Product getProductEntityById(Long id);
 
-	void updateQuantity(Long id,
-			UpdateQuantityRequestDTO updateQuantityRequestDTO,
-			Long loggedInUser);
+	void updateQuantity(Long id, UpdateQuantityRequestDTO updateQuantityRequestDTO, Long loggedInUser);
 }

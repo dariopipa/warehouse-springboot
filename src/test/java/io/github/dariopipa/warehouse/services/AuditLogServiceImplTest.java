@@ -27,77 +27,77 @@ import io.github.dariopipa.warehouse.repositories.AuditLogRepository;
 @ExtendWith(MockitoExtension.class)
 class AuditLogServiceImplTest {
 
-    @Mock
-    private AuditLogRepository auditLogRepository;
+	@Mock
+	private AuditLogRepository auditLogRepository;
 
-    @InjectMocks
-    private AuditLogServiceImpl auditLogService;
+	@InjectMocks
+	private AuditLogServiceImpl auditLogService;
 
-    private AuditLogEvent auditLogEvent;
-    private AuditLog auditLog;
+	private AuditLogEvent auditLogEvent;
+	private AuditLog auditLog;
 
-    @BeforeEach
-    void setUp() {
-        auditLogEvent = new AuditLogEvent(1L, AuditAction.CREATE, EntityType.PRODUCT, 100L, "Product created");
-        auditLog = new AuditLog(1L, AuditAction.CREATE, EntityType.PRODUCT, 100L, "Product created");
-    }
+	@BeforeEach
+	void setUp() {
+		auditLogEvent = new AuditLogEvent(1L, AuditAction.CREATE, EntityType.PRODUCT, 100L, "Product created");
+		auditLog = new AuditLog(1L, AuditAction.CREATE, EntityType.PRODUCT, 100L, "Product created");
+	}
 
-    @Test
-    void test_Save_ShouldCreateAndSaveAuditLog() {
-        auditLogService.save(auditLogEvent);
+	@Test
+	void test_Save_ShouldCreateAndSaveAuditLog() {
+		auditLogService.save(auditLogEvent);
 
-        verify(auditLogRepository).save(any(AuditLog.class));
-    }
+		verify(auditLogRepository).save(any(AuditLog.class));
+	}
 
-    @Test
-    void test_Save_ShouldMapEventToEntityCorrectly() {
-        auditLogService.save(auditLogEvent);
+	@Test
+	void test_Save_ShouldMapEventToEntityCorrectly() {
+		auditLogService.save(auditLogEvent);
 
-        verify(auditLogRepository).save(any(AuditLog.class));
-    }
+		verify(auditLogRepository).save(any(AuditLog.class));
+	}
 
-    @Test
-    void test_FindAll_ShouldReturnPageOfAuditLogs() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<AuditLog> expectedPage = new PageImpl<>(List.of(auditLog));
+	@Test
+	void test_FindAll_ShouldReturnPageOfAuditLogs() {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<AuditLog> expectedPage = new PageImpl<>(List.of(auditLog));
 
-        when(auditLogRepository.findAll(pageable)).thenReturn(expectedPage);
+		when(auditLogRepository.findAll(pageable)).thenReturn(expectedPage);
 
-        Page<AuditLog> result = auditLogService.findAll(pageable);
+		Page<AuditLog> result = auditLogService.findAll(pageable);
 
-        assertEquals(expectedPage, result);
-        verify(auditLogRepository).findAll(pageable);
-    }
+		assertEquals(expectedPage, result);
+		verify(auditLogRepository).findAll(pageable);
+	}
 
-    @Test
-    void test_Save_WithDifferentAction_ShouldSave() {
-        AuditLogEvent updateEvent = new AuditLogEvent(2L, AuditAction.UPDATE, EntityType.PRODUCT_TYPE, 200L,
-                "Product type updated");
+	@Test
+	void test_Save_WithDifferentAction_ShouldSave() {
+		AuditLogEvent updateEvent = new AuditLogEvent(2L, AuditAction.UPDATE, EntityType.PRODUCT_TYPE, 200L,
+				"Product type updated");
 
-        auditLogService.save(updateEvent);
+		auditLogService.save(updateEvent);
 
-        verify(auditLogRepository).save(any(AuditLog.class));
-    }
+		verify(auditLogRepository).save(any(AuditLog.class));
+	}
 
-    @Test
-    void test_Save_WithDeleteAction_ShouldSave() {
-        AuditLogEvent deleteEvent = new AuditLogEvent(3L, AuditAction.DELETE, EntityType.USER, 300L, "User deleted");
+	@Test
+	void test_Save_WithDeleteAction_ShouldSave() {
+		AuditLogEvent deleteEvent = new AuditLogEvent(3L, AuditAction.DELETE, EntityType.USER, 300L, "User deleted");
 
-        auditLogService.save(deleteEvent);
+		auditLogService.save(deleteEvent);
 
-        verify(auditLogRepository).save(any(AuditLog.class));
-    }
+		verify(auditLogRepository).save(any(AuditLog.class));
+	}
 
-    @Test
-    void test_FindAll_WithDifferentPaginationParameters_ShouldCallRepository() {
-        Pageable pageable = PageRequest.of(1, 5);
-        Page<AuditLog> expectedPage = new PageImpl<>(List.of());
+	@Test
+	void test_FindAll_WithDifferentPaginationParameters_ShouldCallRepository() {
+		Pageable pageable = PageRequest.of(1, 5);
+		Page<AuditLog> expectedPage = new PageImpl<>(List.of());
 
-        when(auditLogRepository.findAll(pageable)).thenReturn(expectedPage);
+		when(auditLogRepository.findAll(pageable)).thenReturn(expectedPage);
 
-        Page<AuditLog> result = auditLogService.findAll(pageable);
+		Page<AuditLog> result = auditLogService.findAll(pageable);
 
-        assertEquals(expectedPage, result);
-        verify(auditLogRepository).findAll(pageable);
-    }
+		assertEquals(expectedPage, result);
+		verify(auditLogRepository).findAll(pageable);
+	}
 }

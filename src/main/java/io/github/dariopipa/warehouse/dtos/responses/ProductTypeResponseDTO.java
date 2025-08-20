@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class ProductTypeResponseDTO
-		extends
-			RepresentationModel<ProductTypeResponseDTO> {
+public class ProductTypeResponseDTO extends RepresentationModel<ProductTypeResponseDTO> {
 
 	@NotBlank(message = "Id is required")
 	private Long id;

@@ -31,56 +31,54 @@ import io.github.dariopipa.warehouse.services.interfaces.AuditLogService;
 @ExtendWith(MockitoExtension.class)
 class AuditLogControllerTest {
 
-    @Mock
-    private AuditLogService auditLogService;
+	@Mock
+	private AuditLogService auditLogService;
 
-    @InjectMocks
-    private AuditLogController auditLogController;
+	@InjectMocks
+	private AuditLogController auditLogController;
 
-    @Test
-    void findAll_ShouldReturnPaginatedResponse_WithDefaultParameters() {
-        List<AuditLog> auditLogs = Arrays.asList(
-                createAuditLog(1L, "CREATE", "PRODUCT"),
-                createAuditLog(2L, "UPDATE", "PRODUCT"));
+	@Test
+	void findAll_ShouldReturnPaginatedResponse_WithDefaultParameters() {
+		List<AuditLog> auditLogs = Arrays.asList(createAuditLog(1L, "CREATE", "PRODUCT"),
+				createAuditLog(2L, "UPDATE", "PRODUCT"));
 
-        Page<AuditLog> page = new PageImpl<>(auditLogs,
-                PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")), 2);
+		Page<AuditLog> page = new PageImpl<>(auditLogs,
+				PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")), 2);
 
-        when(auditLogService.findAll(any(Pageable.class))).thenReturn(page);
+		when(auditLogService.findAll(any(Pageable.class))).thenReturn(page);
 
-        PaginatedResponse<AuditLog> response = auditLogController.findAll(0, 10,
-                AuditLogSortByEnum.created_at, SortDirectionEnum.desc);
+		PaginatedResponse<AuditLog> response = auditLogController.findAll(0, 10, AuditLogSortByEnum.created_at,
+				SortDirectionEnum.desc);
 
-        assertNotNull(response);
-        verify(auditLogService).findAll(any(Pageable.class));
-    }
+		assertNotNull(response);
+		verify(auditLogService).findAll(any(Pageable.class));
+	}
 
-    @Test
-    void findAll_ShouldReturnPaginatedResponse_WithCustomParameters() {
-        List<AuditLog> auditLogs = Arrays.asList(
-                createAuditLog(1L, "DELETE", "USER"));
+	@Test
+	void findAll_ShouldReturnPaginatedResponse_WithCustomParameters() {
+		List<AuditLog> auditLogs = Arrays.asList(createAuditLog(1L, "DELETE", "USER"));
 
-        Page<AuditLog> page = new PageImpl<>(auditLogs,
-                PageRequest.of(1, 5, Sort.by(Sort.Direction.ASC, "createdAt")), 1);
+		Page<AuditLog> page = new PageImpl<>(auditLogs, PageRequest.of(1, 5, Sort.by(Sort.Direction.ASC, "createdAt")),
+				1);
 
-        when(auditLogService.findAll(any(Pageable.class))).thenReturn(page);
+		when(auditLogService.findAll(any(Pageable.class))).thenReturn(page);
 
-        PaginatedResponse<AuditLog> response = auditLogController.findAll(1, 5,
-                AuditLogSortByEnum.created_at, SortDirectionEnum.asc);
+		PaginatedResponse<AuditLog> response = auditLogController.findAll(1, 5, AuditLogSortByEnum.created_at,
+				SortDirectionEnum.asc);
 
-        assertNotNull(response);
-        verify(auditLogService).findAll(any(Pageable.class));
-    }
+		assertNotNull(response);
+		verify(auditLogService).findAll(any(Pageable.class));
+	}
 
-    private AuditLog createAuditLog(Long id, String action, String entityType) {
-        AuditLog auditLog = new AuditLog();
-        auditLog.setId(id);
-        auditLog.setAction(AuditAction.valueOf(action));
-        auditLog.setEntityType(EntityType.valueOf(entityType));
-        auditLog.setEntityId(1L);
-        auditLog.setUserId(1L);
-        auditLog.setCreatedAt(Instant.now());
-        auditLog.setDetails("Test audit log details");
-        return auditLog;
-    }
+	private AuditLog createAuditLog(Long id, String action, String entityType) {
+		AuditLog auditLog = new AuditLog();
+		auditLog.setId(id);
+		auditLog.setAction(AuditAction.valueOf(action));
+		auditLog.setEntityType(EntityType.valueOf(entityType));
+		auditLog.setEntityId(1L);
+		auditLog.setUserId(1L);
+		auditLog.setCreatedAt(Instant.now());
+		auditLog.setDetails("Test audit log details");
+		return auditLog;
+	}
 }

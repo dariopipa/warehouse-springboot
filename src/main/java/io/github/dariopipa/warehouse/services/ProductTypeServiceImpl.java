@@ -21,24 +21,20 @@ import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 @Service
 public class ProductTypeServiceImpl implements ProductTypeService {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(ProductTypeServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductTypeServiceImpl.class);
 	private final ProductTypeRepository productTypeRepository;
 	private final AuditLogger auditLogger;
 
-	public ProductTypeServiceImpl(ProductTypeRepository productTypeRepository,
-			AuditLogger auditLogger) {
+	public ProductTypeServiceImpl(ProductTypeRepository productTypeRepository, AuditLogger auditLogger) {
 		this.productTypeRepository = productTypeRepository;
 		this.auditLogger = auditLogger;
 	}
 
 	@Override
 	public Page<ProductTypeResponseDTO> getCollection(Pageable pageable) {
-		logger.info("Fetching product type collection with pageable: {}",
-				pageable);
+		logger.info("Fetching product type collection with pageable: {}", pageable);
 
-		return productTypeRepository.findAll(pageable)
-				.map(ProductTypeMapper::toDto);
+		return productTypeRepository.findAll(pageable).map(ProductTypeMapper::toDto);
 	}
 
 	@Override
@@ -63,22 +59,17 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
 		logger.info("Product type saved with id: {}", saved.getId());
 
-		auditLogger.log(loggedInUser, AuditAction.CREATE,
-				EntityType.PRODUCT_TYPE, saved.getId());
+		auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.PRODUCT_TYPE, saved.getId());
 		return saved.getId();
 	}
 
 	@Override
-	public void update(Long id, ProductTypesDTO productType,
-			Long loggedInUser) {
-		logger.info("Updating product type with id: {} and name: {}", id,
-				productType.getName());
+	public void update(Long id, ProductTypesDTO productType, Long loggedInUser) {
+		logger.info("Updating product type with id: {} and name: {}", id, productType.getName());
 
 		ProductType existingProductType = getProductType(id);
-		if (this.productTypeRepository
-				.existsByNameAndIdNot(productType.getName(), id)) {
-			logger.warn("Product type name already exists for update: {}",
-					productType.getName());
+		if (this.productTypeRepository.existsByNameAndIdNot(productType.getName(), id)) {
+			logger.warn("Product type name already exists for update: {}", productType.getName());
 			throw new ConflictException("Product type name already exists");
 		}
 
@@ -86,8 +77,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		this.productTypeRepository.save(existingProductType);
 		logger.info("Product type updated with id: {}", id);
 
-		auditLogger.log(loggedInUser, AuditAction.UPDATE,
-				EntityType.PRODUCT_TYPE, id);
+		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT_TYPE, id);
 	}
 
 	@Override
@@ -98,8 +88,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		this.productTypeRepository.delete(productType);
 		logger.info("Product type deleted with id: {}", id);
 
-		auditLogger.log(loggedInUser, AuditAction.DELETE,
-				EntityType.PRODUCT_TYPE, id);
+		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT_TYPE, id);
 	}
 
 	@Override
@@ -107,7 +96,6 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 		logger.debug("Retrieving product type with id: {}", id);
 
 		return productTypeRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						"Product type not found with id: " + id));
+				.orElseThrow(() -> new EntityNotFoundException("Product type not found with id: " + id));
 	}
 }

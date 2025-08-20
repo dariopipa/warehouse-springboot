@@ -10,8 +10,7 @@ public class AuditLogEvent {
 	private final Long entityId;
 	private final String details;
 
-	public AuditLogEvent(Long userId, AuditAction action, EntityType entityType,
-			Long entityId, String details) {
+	public AuditLogEvent(Long userId, AuditAction action, EntityType entityType, Long entityId, String details) {
 		this.userId = userId;
 		this.action = action;
 		this.entityType = entityType;
@@ -22,15 +21,19 @@ public class AuditLogEvent {
 	public Long getUserId() {
 		return userId;
 	}
+
 	public AuditAction getAction() {
 		return action;
 	}
+
 	public EntityType getEntityType() {
 		return entityType;
 	}
+
 	public Long getEntityId() {
 		return entityId;
 	}
+
 	public String getDetails() {
 		return details;
 	}

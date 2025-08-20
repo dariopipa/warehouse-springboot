@@ -29,27 +29,23 @@ import jakarta.validation.constraints.Min;
 public class AuditLogController {
 
 	private final AuditLogService auditLogService;
-	private final Logger logger = LoggerFactory
-			.getLogger(AuditLogController.class);
+	private final Logger logger = LoggerFactory.getLogger(AuditLogController.class);
 
 	public AuditLogController(AuditLogService auditLogService) {
 		this.auditLogService = auditLogService;
 	}
 
 	@GetMapping()
-	public PaginatedResponse<AuditLog> findAll(
-			@RequestParam(defaultValue = "0") @Min(0) int page,
+	public PaginatedResponse<AuditLog> findAll(@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "created_at") AuditLogSortByEnum sortBy,
 			@RequestParam(defaultValue = "desc") SortDirectionEnum direction) {
 
-		logger.info(
-				"Fetching audit logs collection - page: {}, size: {}, sortBy: {}, direction: {}",
-				page, size, sortBy, direction);
+		logger.info("Fetching audit logs collection - page: {}, size: {}, sortBy: {}, direction: {}", page, size,
+				sortBy, direction);
 
 		String sortColumn = sortBy.getProperty();
-		Sort.Direction sortDirection = Sort.Direction
-				.fromString(direction.name());
+		Sort.Direction sortDirection = Sort.Direction.fromString(direction.name());
 
 		Sort sort = Sort.by(sortDirection, sortColumn);
 		Pageable pageable = PageRequest.of(page, size, sort);

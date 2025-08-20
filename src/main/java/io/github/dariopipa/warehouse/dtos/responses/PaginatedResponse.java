@@ -71,9 +71,8 @@ public class PaginatedResponse<T> {
 	public PaginatedResponse() {
 	}
 
-	public PaginatedResponse(List<T> data, int currentPage, int totalPages,
-			long totalItems, int pageSize, boolean hasNext,
-			boolean hasPrevious) {
+	public PaginatedResponse(List<T> data, int currentPage, int totalPages, long totalItems, int pageSize,
+			boolean hasNext, boolean hasPrevious) {
 		this.data = data;
 		this.currentPage = currentPage;
 		this.totalPages = totalPages;

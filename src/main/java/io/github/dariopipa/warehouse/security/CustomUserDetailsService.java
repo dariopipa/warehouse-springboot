@@ -11,16 +11,15 @@ import io.github.dariopipa.warehouse.repositories.UserRepository;
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
+
 	public CustomUserDetailsService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException(
-						"User not found: " + username));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 	}
 
 }

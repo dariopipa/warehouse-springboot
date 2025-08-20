@@ -177,7 +177,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", sku=" + sku + ", name=" + name
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+		return "Product [id=" + id + ", sku=" + sku + ", name=" + name + ", createdAt=" + createdAt + ", updatedAt="
+				+ updatedAt + "]";
 	}
 }

@@ -104,7 +104,7 @@ public class ProductType {
 
 	@Override
 	public String toString() {
-		return "ProductType [id=" + id + ", name=" + name + ", createdAt="
-				+ createdAt + ", createdBy=" + createdBy + "]";
+		return "ProductType [id=" + id + ", name=" + name + ", createdAt=" + createdAt + ", createdBy=" + createdBy
+				+ "]";
 	}
 }

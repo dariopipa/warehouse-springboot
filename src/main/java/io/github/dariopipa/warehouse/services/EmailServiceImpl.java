@@ -14,10 +14,10 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(EmailServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 	private final JavaMailSender javaMailSender;
+
 	public EmailServiceImpl(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
 	}
@@ -29,8 +29,7 @@ public class EmailServiceImpl implements EmailService {
 			MimeMessage message = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-			helper.setFrom(
-					new InternetAddress(emailDTO.getFrom(), "Warehouse App"));
+			helper.setFrom(new InternetAddress(emailDTO.getFrom(), "Warehouse App"));
 			helper.setBcc(emailDTO.getTo().toArray(new String[0]));
 			helper.setSubject(emailDTO.getSubject());
 			helper.setText(emailDTO.getBody(), true);
@@ -38,8 +37,7 @@ public class EmailServiceImpl implements EmailService {
 			javaMailSender.send(message);
 
 		} catch (Exception e) {
-			logger.warn("Email failed to send to {}: {}", emailDTO.getTo(),
-					e.getMessage());
+			logger.warn("Email failed to send to {}: {}", emailDTO.getTo(), e.getMessage());
 		}
 	}
 }

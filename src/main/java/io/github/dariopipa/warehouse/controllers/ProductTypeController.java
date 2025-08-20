@@ -45,8 +45,7 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products Type")
 public class ProductTypeController {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(ProductTypeController.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductTypeController.class);
 
 	private final ProductTypeService productTypeService;
 
@@ -55,91 +54,70 @@ public class ProductTypeController {
 	}
 
 	@GetMapping
-	public PaginatedResponse<ProductTypeResponseDTO> getProductTypes(
-			@RequestParam(defaultValue = "0") @Min(0) int page,
+	public PaginatedResponse<ProductTypeResponseDTO> getProductTypes(@RequestParam(defaultValue = "0") @Min(0) int page,
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "name") ProductTypeSortByEnum sortBy,
 			@RequestParam(defaultValue = "desc") SortDirectionEnum direction) {
-		logger.info(
-				"Fetching product types collection - page: {}, size: {}, sortBy: {}, direction: {}",
-				page, size, sortBy, direction);
+		logger.info("Fetching product types collection - page: {}, size: {}, sortBy: {}, direction: {}", page, size,
+				sortBy, direction);
 
 		String sortColumn = sortBy.getProperty();
-		Sort.Direction sortDirection = Sort.Direction
-				.fromString(direction.name());
+		Sort.Direction sortDirection = Sort.Direction.fromString(direction.name());
 
 		Sort sort = Sort.by(sortDirection, sortColumn);
 		Pageable pageable = PageRequest.of(page, size, sort);
-		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService
-				.getCollection(pageable);
+		Page<ProductTypeResponseDTO> paginatedResponse = productTypeService.getCollection(pageable);
 
 		paginatedResponse.forEach(p -> p.add(
-				linkTo(methodOn(ProductTypeController.class)
-						.getProductType(p.getId())).withSelfRel(),
+				linkTo(methodOn(ProductTypeController.class).getProductType(p.getId())).withSelfRel(),
 
-				linkTo(methodOn(ProductTypeController.class)
-						.updateProductTypes(p.getId(), null, null))
+				linkTo(methodOn(ProductTypeController.class).updateProductTypes(p.getId(), null, null))
 						.withRel("update"),
 
-				linkTo(methodOn(ProductTypeController.class)
-						.deleteProductTypes(p.getId(), null))
-						.withRel("delete")));
+				linkTo(methodOn(ProductTypeController.class).deleteProductTypes(p.getId(), null)).withRel("delete")));
 
-		logger.debug(
-				"Product types collection retrieved successfully - total elements: {}",
+		logger.debug("Product types collection retrieved successfully - total elements: {}",
 				paginatedResponse.getTotalElements());
 
 		return PaginationUtils.buildPaginatedResponse(paginatedResponse);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductTypeResponseDTO> getProductType(
-			@PathVariable Long id) {
+	public ResponseEntity<ProductTypeResponseDTO> getProductType(@PathVariable Long id) {
 		logger.info("Fetching product type with id: {}", id);
 
-		ProductTypeResponseDTO productType = this.productTypeService
-				.getById(id);
+		ProductTypeResponseDTO productType = this.productTypeService.getById(id);
 
 		productType.add(
 
-				linkTo(methodOn(ProductTypeController.class).getProductType(id))
-						.withSelfRel(),
+				linkTo(methodOn(ProductTypeController.class).getProductType(id)).withSelfRel(),
 
-				linkTo(methodOn(ProductTypeController.class).getProductTypes(0,
-						10, ProductTypeSortByEnum.name, SortDirectionEnum.asc))
-						.withRel("collection"),
+				linkTo(methodOn(ProductTypeController.class).getProductTypes(0, 10, ProductTypeSortByEnum.name,
+						SortDirectionEnum.asc)).withRel("collection"),
 
-				linkTo(methodOn(ProductTypeController.class)
-						.updateProductTypes(id, null, null)).withRel("update"),
+				linkTo(methodOn(ProductTypeController.class).updateProductTypes(id, null, null)).withRel("update"),
 
-				linkTo(methodOn(ProductTypeController.class)
-						.deleteProductTypes(id, null)).withRel("delete"));
+				linkTo(methodOn(ProductTypeController.class).deleteProductTypes(id, null)).withRel("delete"));
 
-		logger.debug("Product type retrieved successfully: {}",
-				productType.getName());
+		logger.debug("Product type retrieved successfully: {}", productType.getName());
 
 		return ResponseEntity.ok(productType);
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Void> createProductTypes(
-			@Valid @RequestBody ProductTypesDTO productType,
+	public ResponseEntity<Void> createProductTypes(@Valid @RequestBody ProductTypesDTO productType,
 			@AuthenticationPrincipal User loggedInUser) {
-		logger.info("Creating new product type with name: {}",
-				productType.getName());
+		logger.info("Creating new product type with name: {}", productType.getName());
 
-		Long id = this.productTypeService.save(productType,
-				loggedInUser.getId());
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(id).toUri();
+		Long id = this.productTypeService.save(productType, loggedInUser.getId());
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 
 		logger.info("Product type created successfully with id: {}", id);
 		return ResponseEntity.created(location).build();
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id,
-			@AuthenticationPrincipal User loggedInUser) {
+	public ResponseEntity<Void> deleteProductTypes(@PathVariable Long id, @AuthenticationPrincipal User loggedInUser) {
 		logger.info("Deleting product type with id: {}", id);
 		this.productTypeService.delete(id, loggedInUser.getId());
 
@@ -149,10 +127,8 @@ public class ProductTypeController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<ProductType> updateProductTypes(@PathVariable Long id,
-			@Valid @RequestBody ProductTypesDTO productType,
-			@AuthenticationPrincipal User loggedInUser) {
-		logger.info("Updating product type with id: {} and name: {}", id,
-				productType.getName());
+			@Valid @RequestBody ProductTypesDTO productType, @AuthenticationPrincipal User loggedInUser) {
+		logger.info("Updating product type with id: {} and name: {}", id, productType.getName());
 		this.productTypeService.update(id, productType, loggedInUser.getId());
 
 		logger.info("Product type updated successfully with id: {}", id);

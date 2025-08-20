@@ -67,12 +67,10 @@ class JwtUtilsTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-			"wronguser, Token should be invalid for a mismatched username.",
+	@CsvSource({ "wronguser, Token should be invalid for a mismatched username.",
 			"otheruser, Token should be invalid for a completely different username.",
 			"'', Token should be invalid for empty username.",
-			"admin, Token should be invalid for different valid username."
-	})
+			"admin, Token should be invalid for different valid username." })
 	void test_ValidateToken_ReturnsFalseForWrongUser(String mismatchedUsername, String message) {
 		assertFalse(jwtUtils.validateToken(validJwtToken, mismatchedUsername), message);
 	}
@@ -88,10 +86,7 @@ class JwtUtilsTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-			"still.not.a.jwt, false",
-			"random-string, false"
-	})
+	@CsvSource({ "still.not.a.jwt, false", "random-string, false" })
 	void test_ValidateToken_ReturnsFalseForInvalidTokens(String invalidToken, boolean expectedResult) {
 		assertEquals(expectedResult, jwtUtils.validateToken(invalidToken, "anyusername"));
 	}

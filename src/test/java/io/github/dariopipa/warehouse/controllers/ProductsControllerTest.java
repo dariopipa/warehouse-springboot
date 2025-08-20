@@ -90,40 +90,34 @@ class ProductsControllerTest {
 
 	@Test
 	void test_CreateProduct_ShouldCallService_DTOIsValid() {
-		when(productService.save(eq(createProductDTO),
-				eq(loggedInUser.getId()))).thenReturn(productId);
+		when(productService.save(eq(createProductDTO), eq(loggedInUser.getId()))).thenReturn(productId);
 
 		assertThrows(IllegalStateException.class, () -> {
 			productsController.createProduct(loggedInUser, createProductDTO);
 		});
 
-		verify(productService).save(eq(createProductDTO),
-				eq(loggedInUser.getId()));
+		verify(productService).save(eq(createProductDTO), eq(loggedInUser.getId()));
 	}
 
 	@Test
 	void test_CreateProduct_ShouldThrowException_WhenProductAlreadyExists() {
 		createProductDTO.setName("Existing Product");
 
-		when(productService.save(eq(createProductDTO),
-				eq(loggedInUser.getId())))
+		when(productService.save(eq(createProductDTO), eq(loggedInUser.getId())))
 				.thenThrow(new ConflictException("Product already exists"));
 
 		assertThrows(ConflictException.class, () -> {
 			productsController.createProduct(loggedInUser, createProductDTO);
 		});
 
-		verify(productService).save(eq(createProductDTO),
-				eq(loggedInUser.getId()));
+		verify(productService).save(eq(createProductDTO), eq(loggedInUser.getId()));
 	}
 
 	@Test
 	void test_GetProduct_ShouldReturnProduct_WhenProductExists() {
-		when(productService.getById(eq(productId)))
-				.thenReturn(productResponseDTO);
+		when(productService.getById(eq(productId))).thenReturn(productResponseDTO);
 
-		ResponseEntity<ProductGetOneResponseDTO> response = productsController
-				.getProduct(productId);
+		ResponseEntity<ProductGetOneResponseDTO> response = productsController.getProduct(productId);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -147,19 +141,16 @@ class ProductsControllerTest {
 
 	@Test
 	void test_GetProductCollection_ShouldReturnPaginatedResponse_WithDefaultParameters() {
-		List<ProductGetOneResponseDTO> products = Arrays.asList(
-				createProductResponseDTO(1L, "Product 1"),
+		List<ProductGetOneResponseDTO> products = Arrays.asList(createProductResponseDTO(1L, "Product 1"),
 				createProductResponseDTO(2L, "Product 2"));
 
 		Page<ProductGetOneResponseDTO> page = new PageImpl<>(products,
 				PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name")), 2);
 
-		when(productService.getCollection(any(Pageable.class)))
-				.thenReturn(page);
+		when(productService.getCollection(any(Pageable.class))).thenReturn(page);
 
-		PaginatedResponse<ProductGetOneResponseDTO> response = productsController
-				.getProductCollection(0, 10, ProductSortByEnum.name,
-						SortDirectionEnum.asc);
+		PaginatedResponse<ProductGetOneResponseDTO> response = productsController.getProductCollection(0, 10,
+				ProductSortByEnum.name, SortDirectionEnum.asc);
 
 		assertNotNull(response);
 		verify(productService).getCollection(any(Pageable.class));
@@ -167,11 +158,9 @@ class ProductsControllerTest {
 
 	@Test
 	void test_DeleteProduct_ShouldReturnNoContent_WhenProductExists() {
-		doNothing().when(productService).delete(eq(productId),
-				eq(loggedInUser.getId()));
+		doNothing().when(productService).delete(eq(productId), eq(loggedInUser.getId()));
 
-		ResponseEntity<Void> response = productsController
-				.deleteProduct(productId, loggedInUser);
+		ResponseEntity<Void> response = productsController.deleteProduct(productId, loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -182,50 +171,42 @@ class ProductsControllerTest {
 	void test_DeleteProduct_ShouldThrowException_WhenProductDoesNotExist() {
 		Long nonExistentProductId = 999L;
 
-		doThrow(new EntityNotFoundException("Product not found"))
-				.when(productService)
-				.delete(eq(nonExistentProductId), eq(loggedInUser.getId()));
+		doThrow(new EntityNotFoundException("Product not found")).when(productService).delete(eq(nonExistentProductId),
+				eq(loggedInUser.getId()));
 
 		assertThrows(EntityNotFoundException.class, () -> {
-			productsController.deleteProduct(nonExistentProductId,
-					loggedInUser);
+			productsController.deleteProduct(nonExistentProductId, loggedInUser);
 		});
 
-		verify(productService).delete(eq(nonExistentProductId),
-				eq(loggedInUser.getId()));
+		verify(productService).delete(eq(nonExistentProductId), eq(loggedInUser.getId()));
 	}
 
 	@Test
 	void test_UpdateProduct_ShouldReturnNoContent_WhenCreatingNewProduct() {
-		doNothing().when(productService).update(eq(productId),
-				eq(updateProductRequestDTO), eq(loggedInUser.getId()));
+		doNothing().when(productService).update(eq(productId), eq(updateProductRequestDTO), eq(loggedInUser.getId()));
 
-		ResponseEntity<Void> response = productsController
-				.updateEntity(productId, updateProductRequestDTO, loggedInUser);
+		ResponseEntity<Void> response = productsController.updateEntity(productId, updateProductRequestDTO,
+				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productService).update(eq(productId),
-				eq(updateProductRequestDTO), eq(loggedInUser.getId()));
+		verify(productService).update(eq(productId), eq(updateProductRequestDTO), eq(loggedInUser.getId()));
 	}
 
 	@Test
 	void test_UpdateProductQuantity_ShouldReturnNoContent_WhenCreationFails() {
-		doNothing().when(productService).updateQuantity(eq(productId),
-				eq(updateQuantityRequestDTO), eq(loggedInUser.getId()));
+		doNothing().when(productService).updateQuantity(eq(productId), eq(updateQuantityRequestDTO),
+				eq(loggedInUser.getId()));
 
-		ResponseEntity<Void> response = productsController
-				.updateProductQuantity(productId, updateQuantityRequestDTO,
-						loggedInUser);
+		ResponseEntity<Void> response = productsController.updateProductQuantity(productId, updateQuantityRequestDTO,
+				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-		verify(productService).updateQuantity(eq(productId),
-				eq(updateQuantityRequestDTO), eq(loggedInUser.getId()));
+		verify(productService).updateQuantity(eq(productId), eq(updateQuantityRequestDTO), eq(loggedInUser.getId()));
 	}
 
-	private ProductGetOneResponseDTO createProductResponseDTO(Long id,
-			String name) {
+	private ProductGetOneResponseDTO createProductResponseDTO(Long id, String name) {
 		ProductGetOneResponseDTO dto = new ProductGetOneResponseDTO();
 		dto.setId(id);
 		dto.setName(name);

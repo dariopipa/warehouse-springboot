@@ -39,13 +39,12 @@ public class JwtUtils {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
-		return Jwts.builder().subject(user.getUsername()).claim("id", userId)
-				.issuedAt(now).expiration(expiryDate).signWith(key).compact();
+		return Jwts.builder().subject(user.getUsername()).claim("id", userId).issuedAt(now).expiration(expiryDate)
+				.signWith(key).compact();
 	}
 
 	private Claims parseToken(String token) {
-		return Jwts.parser().verifyWith(key).build().parseSignedClaims(token)
-				.getPayload();
+		return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 	}
 
 	public String getUsernameFromToken(String token) {

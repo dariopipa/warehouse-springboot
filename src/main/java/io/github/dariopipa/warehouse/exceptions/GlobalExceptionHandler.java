@@ -17,26 +17,21 @@ import jakarta.validation.ConstraintViolationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(GlobalExceptionHandler.class);
+	private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<Object> handleEntityNotFoundException(
-			EntityNotFoundException ex) {
+	public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex) {
 		logger.warn("Entity not found: {}", ex.getMessage());
 
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.NOT_FOUND.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ConflictException.class)
-	public ResponseEntity<Object> handleEntityConflictException(
-			ConflictException ex) {
+	public ResponseEntity<Object> handleEntityConflictException(ConflictException ex) {
 		logger.warn("Conflict occurred: {}", ex.getMessage());
 
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
 	}
 
@@ -44,74 +39,59 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Object> handleGenericException(Exception ex) {
 		logger.error("Unexpected error occurred: {}", ex.getMessage(), ex);
 
-		ErrorMessage apiError = new ErrorMessage(
-				HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(),
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(),
 				"An unexpected error occurred");
 		return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<Object> handleIllegalArgumentException(
-			IllegalArgumentException ex) {
+	public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
 		logger.warn("Invalid argument provided: {}", ex.getMessage());
 
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler({ ConstraintViolationException.class,
-			MethodArgumentTypeMismatchException.class })
-	public ResponseEntity<Object> handleConstraintViolation(
-			ConstraintViolationException ex) {
+	@ExceptionHandler({ ConstraintViolationException.class, MethodArgumentTypeMismatchException.class })
+	public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
 		logger.warn("Validation constraint violated: {}", ex.getMessage());
 
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Object> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException ex) {
+	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
 		logger.warn("Method argument validation failed: {}", ex.getMessage());
 
 		String errorMessage = "Validation failed";
 		if (ex.getBindingResult().hasFieldErrors()) {
-			errorMessage = ex.getBindingResult().getFieldErrors().get(0)
-					.getDefaultMessage();
+			errorMessage = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
 		}
 
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-				new Date(), errorMessage);
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), errorMessage);
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(UserAlreadyExistsException.class)
-	public ResponseEntity<Object> handleUserAlreadyExistsException(
-			UserAlreadyExistsException ex) {
+	public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
 		logger.warn("User already exists: {}", ex.getMessage());
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<Object> handleBadCredentialsException(
-			BadCredentialsException ex) {
+	public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
 		logger.warn("Authentication failed: Invalid credentials");
-		ErrorMessage apiError = new ErrorMessage(
-				HttpStatus.UNAUTHORIZED.value(), new Date(),
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.UNAUTHORIZED.value(), new Date(),
 				"Invalid username or password");
 		return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(InvalidRoleException.class)
-	public ResponseEntity<Object> handleInvalidRoleException(
-			InvalidRoleException ex) {
+	public ResponseEntity<Object> handleInvalidRoleException(InvalidRoleException ex) {
 		logger.warn("Invalid role: {}", ex.getMessage());
-		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
-				new Date(), ex.getMessage());
+		ErrorMessage apiError = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 

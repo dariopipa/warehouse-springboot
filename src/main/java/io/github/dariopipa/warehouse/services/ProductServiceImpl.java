@@ -31,8 +31,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(ProductServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	private final ProductRepository productRepository;
 	private final ProductTypeService productTypeService;
@@ -40,10 +39,8 @@ public class ProductServiceImpl implements ProductService {
 	private final AuditLogger auditLogger;
 	private final StockAlertService stockAlertService;
 
-	public ProductServiceImpl(ProductRepository productRepository,
-			ProductTypeService productTypeService,
-			SkuGeneratorService skuGeneratorService, AuditLogger auditLogger,
-			StockAlertService stockAlertService) {
+	public ProductServiceImpl(ProductRepository productRepository, ProductTypeService productTypeService,
+			SkuGeneratorService skuGeneratorService, AuditLogger auditLogger, StockAlertService stockAlertService) {
 		this.productRepository = productRepository;
 		this.productTypeService = productTypeService;
 		this.skuGeneratorService = skuGeneratorService;
@@ -58,27 +55,21 @@ public class ProductServiceImpl implements ProductService {
 		logger.info("Saving new product: {}", dto.getName());
 		if (this.productRepository.existsByName(dto.getName())) {
 			logger.warn("Product already exists with name: {}", dto.getName());
-			throw new ConflictException(
-					"Product already exists with that name");
+			throw new ConflictException("Product already exists with that name");
 		}
 
-		ProductType productType = productTypeService
-				.getProductType(dto.getProductTypeId());
-		String generatedSku = skuGeneratorService.generateSku(dto.getName(),
-				productType.getName());
-		Product productEntity = ProductMapper.toEntity(dto, loggedInUser,
-				productType, generatedSku);
+		ProductType productType = productTypeService.getProductType(dto.getProductTypeId());
+		String generatedSku = skuGeneratorService.generateSku(dto.getName(), productType.getName());
+		Product productEntity = ProductMapper.toEntity(dto, loggedInUser, productType, generatedSku);
 		try {
 			Product savedEntity = this.productRepository.save(productEntity);
 			logger.info("Product saved with id: {}", savedEntity.getId());
 
-			auditLogger.log(loggedInUser, AuditAction.CREATE,
-					EntityType.PRODUCT, savedEntity.getId());
+			auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.PRODUCT, savedEntity.getId());
 
 			return savedEntity.getId();
 		} catch (DataIntegrityViolationException e) {
-			logger.error("Data integrity violation while saving product: {}",
-					e.getMessage());
+			logger.error("Data integrity violation while saving product: {}", e.getMessage());
 
 			throw new ConflictException("Sku already exists");
 		}
@@ -86,20 +77,16 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void update(Long id, UpdateProductRequestDTO updateRequestDTO,
-			Long loggedInUser) {
+	public void update(Long id, UpdateProductRequestDTO updateRequestDTO, Long loggedInUser) {
 		logger.info("Updating product with id: {}", id);
 
 		Product product = getProduct(id);
-		ProductType productType = productTypeService
-				.getProductType(updateRequestDTO.getProductTypeId());
+		ProductType productType = productTypeService.getProductType(updateRequestDTO.getProductTypeId());
 
-		this.productRepository.save(ProductMapper
-				.updateEntityFromDto(updateRequestDTO, product, productType));
+		this.productRepository.save(ProductMapper.updateEntityFromDto(updateRequestDTO, product, productType));
 		logger.info("Product updated with id: {}", id);
 
-		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT,
-				id);
+		auditLogger.log(loggedInUser, AuditAction.UPDATE, EntityType.PRODUCT, id);
 	}
 
 	@Override
@@ -109,8 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
 		this.productRepository.delete(product);
 		logger.info("Product deleted with id: {}", id);
-		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT,
-				id);
+		auditLogger.log(loggedInUser, AuditAction.DELETE, EntityType.PRODUCT, id);
 	}
 
 	@Override
@@ -129,25 +115,19 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public void updateQuantity(Long id,
-			UpdateQuantityRequestDTO updateQuantityRequestDTO,
-			Long loggedInUser) {
+	public void updateQuantity(Long id, UpdateQuantityRequestDTO updateQuantityRequestDTO, Long loggedInUser) {
 
-		logger.info(
-				"Updating quantity for product id: {} with operation: {} and quantity: {}",
-				id, updateQuantityRequestDTO.getOperation(),
-				updateQuantityRequestDTO.getQuantity());
+		logger.info("Updating quantity for product id: {} with operation: {} and quantity: {}", id,
+				updateQuantityRequestDTO.getOperation(), updateQuantityRequestDTO.getQuantity());
 
 		Product product = getProduct(id);
-		int delta = updateQuantityRequestDTO
-				.getOperation() == OperationsType.INCREASE
-						? updateQuantityRequestDTO.getQuantity()
-						: -updateQuantityRequestDTO.getQuantity();
+		int delta = updateQuantityRequestDTO.getOperation() == OperationsType.INCREASE
+				? updateQuantityRequestDTO.getQuantity()
+				: -updateQuantityRequestDTO.getQuantity();
 
 		int newQuantity = product.getQuantity() + delta;
 		if (newQuantity < 0) {
-			throw new IllegalArgumentException(
-					"Product quantity cannot be reduced to less than 0");
+			throw new IllegalArgumentException("Product quantity cannot be reduced to less than 0");
 		}
 
 		this.productRepository.updateQuantityById(id, delta);
@@ -155,23 +135,20 @@ public class ProductServiceImpl implements ProductService {
 		this.auditLogger.logQuantityUpdate(loggedInUser, EntityType.PRODUCT, id,
 				updateQuantityRequestDTO.getOperation(), newQuantity);
 
-		logger.info("Quantity updated for product id: {} by delta: {}", id,
-				delta);
+		logger.info("Quantity updated for product id: {} by delta: {}", id, delta);
 	}
 
 	private Product getProduct(Long id) {
 		logger.debug("Retrieving product with id: {}", id);
 
 		return this.productRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						"Product not found with id: " + id));
+				.orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 	}
 
 	@Override
 	public Product getProductEntityById(Long id) {
 		return this.productRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(
-						"Product not found with id: " + id));
+				.orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 	}
 
 }

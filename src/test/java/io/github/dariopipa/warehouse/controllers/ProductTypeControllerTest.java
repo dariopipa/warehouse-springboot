@@ -74,8 +74,7 @@ class ProductTypeControllerTest {
 
 	@Test
 	void test_CreateProductTypes_ShouldCallService_WhenRequestDtoIsValid() {
-		when(productTypeService.save(eq(productTypesDTO), eq(loggedInUser.getId())))
-				.thenReturn(productTypeId);
+		when(productTypeService.save(eq(productTypesDTO), eq(loggedInUser.getId()))).thenReturn(productTypeId);
 
 		assertThrows(IllegalStateException.class, () -> {
 			productTypeController.createProductTypes(productTypesDTO, loggedInUser);
@@ -102,8 +101,7 @@ class ProductTypeControllerTest {
 	void test_GetProductType_ShouldReturnProductType_WhenProductTypeExists() {
 		when(productTypeService.getById(eq(productTypeId))).thenReturn(productTypeResponseDTO);
 
-		ResponseEntity<ProductTypeResponseDTO> response = productTypeController
-				.getProductType(productTypeId);
+		ResponseEntity<ProductTypeResponseDTO> response = productTypeController.getProductType(productTypeId);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -127,18 +125,16 @@ class ProductTypeControllerTest {
 
 	@Test
 	void test_GetProductTypes_ShouldReturnPaginatedResponse_WithDefaultParameters() {
-		List<ProductTypeResponseDTO> productTypes = Arrays.asList(
-				createProductTypeResponseDTO(1L, "Electronics"),
+		List<ProductTypeResponseDTO> productTypes = Arrays.asList(createProductTypeResponseDTO(1L, "Electronics"),
 				createProductTypeResponseDTO(2L, "Clothing"));
 
 		Page<ProductTypeResponseDTO> page = new PageImpl<>(productTypes,
 				PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "name")), 2);
 
-		when(productTypeService.getCollection(any(Pageable.class)))
-				.thenReturn(page);
+		when(productTypeService.getCollection(any(Pageable.class))).thenReturn(page);
 
-		PaginatedResponse<ProductTypeResponseDTO> response = productTypeController
-				.getProductTypes(0, 10, ProductTypeSortByEnum.name, SortDirectionEnum.desc);
+		PaginatedResponse<ProductTypeResponseDTO> response = productTypeController.getProductTypes(0, 10,
+				ProductTypeSortByEnum.name, SortDirectionEnum.desc);
 
 		assertNotNull(response);
 		verify(productTypeService).getCollection(any(Pageable.class));
@@ -148,8 +144,7 @@ class ProductTypeControllerTest {
 	void test_DeleteProductTypes_ShouldReturnNoContent_WhenProductTypeExists() {
 		doNothing().when(productTypeService).delete(eq(productTypeId), eq(loggedInUser.getId()));
 
-		ResponseEntity<Void> response = productTypeController
-				.deleteProductTypes(productTypeId, loggedInUser);
+		ResponseEntity<Void> response = productTypeController.deleteProductTypes(productTypeId, loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -160,8 +155,7 @@ class ProductTypeControllerTest {
 	void test_DeleteProductTypes_ShouldThrowException_WhenProductTypeDoesNotExist() {
 		Long nonExistentProductTypeId = 999L;
 
-		doThrow(new EntityNotFoundException("Product type not found"))
-				.when(productTypeService)
+		doThrow(new EntityNotFoundException("Product type not found")).when(productTypeService)
 				.delete(eq(nonExistentProductTypeId), eq(loggedInUser.getId()));
 
 		assertThrows(EntityNotFoundException.class, () -> {
@@ -178,8 +172,8 @@ class ProductTypeControllerTest {
 
 		doNothing().when(productTypeService).update(eq(productTypeId), eq(updateDTO), eq(loggedInUser.getId()));
 
-		ResponseEntity<ProductType> response = productTypeController
-				.updateProductTypes(productTypeId, updateDTO, loggedInUser);
+		ResponseEntity<ProductType> response = productTypeController.updateProductTypes(productTypeId, updateDTO,
+				loggedInUser);
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());

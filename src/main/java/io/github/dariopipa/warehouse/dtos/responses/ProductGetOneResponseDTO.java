@@ -4,9 +4,7 @@ import java.time.Instant;
 
 import org.springframework.hateoas.RepresentationModel;
 
-public class ProductGetOneResponseDTO
-		extends
-			RepresentationModel<ProductGetOneResponseDTO> {
+public class ProductGetOneResponseDTO extends RepresentationModel<ProductGetOneResponseDTO> {
 
 	private Long id;
 	private String sku;

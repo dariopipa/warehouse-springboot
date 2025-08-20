@@ -46,8 +46,7 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Products")
 public class ProductsController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ProductsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private final ProductService productService;
 
 	public ProductsController(ProductService productService) {
@@ -55,54 +54,42 @@ public class ProductsController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Void> createProduct(
-			@AuthenticationPrincipal User loggedInUser,
+	public ResponseEntity<Void> createProduct(@AuthenticationPrincipal User loggedInUser,
 			@Valid @RequestBody CreateProductDTO requestBody) {
-		logger.info("Creating new product with name: {}",
-				requestBody.getName());
+		logger.info("Creating new product with name: {}", requestBody.getName());
 
 		Long id = this.productService.save(requestBody, loggedInUser.getId());
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(id).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 
 		logger.info("Product created successfully with id: {}", id);
 		return ResponseEntity.created(location).build();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductGetOneResponseDTO> getProduct(
-			@PathVariable Long id) {
+	public ResponseEntity<ProductGetOneResponseDTO> getProduct(@PathVariable Long id) {
 		logger.info("Fetching product with id: {}", id);
-		ProductGetOneResponseDTO productGetOneResponseDTO = this.productService
-				.getById(id);
+		ProductGetOneResponseDTO productGetOneResponseDTO = this.productService.getById(id);
 
 		productGetOneResponseDTO.add(
 
-				linkTo(methodOn(ProductsController.class).getProduct(id))
-						.withSelfRel(),
+				linkTo(methodOn(ProductsController.class).getProduct(id)).withSelfRel(),
 
-				linkTo(methodOn(ProductsController.class).getProductCollection(
-						0, 10, ProductSortByEnum.name, SortDirectionEnum.asc))
-						.withRel("collection"),
+				linkTo(methodOn(ProductsController.class).getProductCollection(0, 10, ProductSortByEnum.name,
+						SortDirectionEnum.asc)).withRel("collection"),
 
-				linkTo(methodOn(ProductsController.class).updateEntity(id, null,
-						null)).withRel("update"),
+				linkTo(methodOn(ProductsController.class).updateEntity(id, null, null)).withRel("update"),
 
-				linkTo(methodOn(ProductsController.class)
-						.updateProductQuantity(id, null, null))
+				linkTo(methodOn(ProductsController.class).updateProductQuantity(id, null, null))
 						.withRel("updateQuantity"),
 
-				linkTo(methodOn(ProductsController.class).deleteProduct(id,
-						null)).withRel("delete"));
+				linkTo(methodOn(ProductsController.class).deleteProduct(id, null)).withRel("delete"));
 
-		logger.debug("Product retrieved successfully: {}",
-				productGetOneResponseDTO.getName());
+		logger.debug("Product retrieved successfully: {}", productGetOneResponseDTO.getName());
 		return ResponseEntity.ok(productGetOneResponseDTO);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable Long id,
-			@AuthenticationPrincipal User loggedInUser) {
+	public ResponseEntity<Void> deleteProduct(@PathVariable Long id, @AuthenticationPrincipal User loggedInUser) {
 		logger.info("Deleting product with id: {}", id);
 		this.productService.delete(id, loggedInUser.getId());
 
@@ -112,10 +99,8 @@ public class ProductsController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateEntity(@PathVariable Long id,
-			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO,
-			@AuthenticationPrincipal User loggedInUser) {
-		logger.info("Updating product with id: {} and name: {}", id,
-				updateRequestDTO.getName());
+			@Valid @RequestBody UpdateProductRequestDTO updateRequestDTO, @AuthenticationPrincipal User loggedInUser) {
+		logger.info("Updating product with id: {} and name: {}", id, updateRequestDTO.getName());
 		this.productService.update(id, updateRequestDTO, loggedInUser.getId());
 
 		logger.info("Product updated successfully with id: {}", id);
@@ -126,13 +111,10 @@ public class ProductsController {
 	public ResponseEntity<Void> updateProductQuantity(@PathVariable Long id,
 			@Valid @RequestBody UpdateQuantityRequestDTO updateQuantityRequestDTO,
 			@AuthenticationPrincipal User loggedInUser) {
-		logger.info(
-				"Updating quantity for product id: {} with operation: {} and quantity: {}",
-				id, updateQuantityRequestDTO.getOperation(),
-				updateQuantityRequestDTO.getQuantity());
+		logger.info("Updating quantity for product id: {} with operation: {} and quantity: {}", id,
+				updateQuantityRequestDTO.getOperation(), updateQuantityRequestDTO.getQuantity());
 
-		this.productService.updateQuantity(id, updateQuantityRequestDTO,
-				loggedInUser.getId());
+		this.productService.updateQuantity(id, updateQuantityRequestDTO, loggedInUser.getId());
 		logger.info("Product quantity updated successfully for id: {}", id);
 		return ResponseEntity.noContent().build();
 	}
@@ -143,35 +125,27 @@ public class ProductsController {
 			@RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
 			@RequestParam(defaultValue = "name") ProductSortByEnum sortBy,
 			@RequestParam(defaultValue = "asc") SortDirectionEnum direction) {
-		logger.info(
-				"Fetching product collection - page: {}, size: {}, sortBy: {}, direction: {}",
-				page, size, sortBy, direction);
+		logger.info("Fetching product collection - page: {}, size: {}, sortBy: {}, direction: {}", page, size, sortBy,
+				direction);
 
 		String sortColumn = sortBy.getProperty();
-		Sort.Direction sortDirection = Sort.Direction
-				.fromString(direction.name());
+		Sort.Direction sortDirection = Sort.Direction.fromString(direction.name());
 
 		Sort sort = Sort.by(sortDirection, sortColumn);
 		Pageable pageable = PageRequest.of(page, size, sort);
-		Page<ProductGetOneResponseDTO> paginatedResponse = productService
-				.getCollection(pageable);
+		Page<ProductGetOneResponseDTO> paginatedResponse = productService.getCollection(pageable);
 
 		paginatedResponse.forEach(p -> p.add(
-				linkTo(methodOn(ProductsController.class).getProduct(p.getId()))
-						.withSelfRel(),
+				linkTo(methodOn(ProductsController.class).getProduct(p.getId())).withSelfRel(),
 
-				linkTo(methodOn(ProductsController.class)
-						.updateEntity(p.getId(), null, null)).withRel("update"),
+				linkTo(methodOn(ProductsController.class).updateEntity(p.getId(), null, null)).withRel("update"),
 
-				linkTo(methodOn(ProductsController.class)
-						.updateProductQuantity(p.getId(), null, null))
+				linkTo(methodOn(ProductsController.class).updateProductQuantity(p.getId(), null, null))
 						.withRel("updateQuantity"),
 
-				linkTo(methodOn(ProductsController.class)
-						.deleteProduct(p.getId(), null)).withRel("delete")));
+				linkTo(methodOn(ProductsController.class).deleteProduct(p.getId(), null)).withRel("delete")));
 
-		logger.debug(
-				"Product collection retrieved successfully - total elements: {}",
+		logger.debug("Product collection retrieved successfully - total elements: {}",
 				paginatedResponse.getTotalElements());
 
 		return PaginationUtils.buildPaginatedResponse(paginatedResponse);
