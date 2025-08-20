@@ -30,7 +30,7 @@ jobs:
       - name: Health check
         run: |
           docker compose up -d
-          sleep 30
+          sleep 100
           curl -f http://localhost:6565/swagger-ui/index.html#/
 
       - name: Stop compose
