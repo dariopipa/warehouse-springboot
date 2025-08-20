@@ -104,8 +104,8 @@ public class AuditLog {
 	public AuditLog() {
 
 	}
-	public AuditLog(Long userId, AuditAction action, EntityType entityType,
-			Long entityId, String details) {
+
+	public AuditLog(Long userId, AuditAction action, EntityType entityType, Long entityId, String details) {
 		this.userId = userId;
 		this.action = action;
 		this.entityType = entityType;

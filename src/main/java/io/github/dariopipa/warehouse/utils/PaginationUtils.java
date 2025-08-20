@@ -10,8 +10,7 @@ public class PaginationUtils {
 
 	}
 
-	public static <T> PaginatedResponse<T> buildPaginatedResponse(
-			Page<T> pageData) {
+	public static <T> PaginatedResponse<T> buildPaginatedResponse(Page<T> pageData) {
 
 		PaginatedResponse<T> response = new PaginatedResponse<>();
 

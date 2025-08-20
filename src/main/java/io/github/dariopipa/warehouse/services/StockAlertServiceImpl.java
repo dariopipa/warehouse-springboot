@@ -25,11 +25,10 @@ public class StockAlertServiceImpl implements StockAlertService {
 	private final EmailService emailService;
 	private final AuthService authService;
 
-	private final Logger logger = LoggerFactory
-			.getLogger(StockAlertServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(StockAlertServiceImpl.class);
 
-	public StockAlertServiceImpl(StockAlertRepository stockAlertRepository,
-			EmailService emailService, AuthService authService) {
+	public StockAlertServiceImpl(StockAlertRepository stockAlertRepository, EmailService emailService,
+			AuthService authService) {
 		this.stockAlertRepository = stockAlertRepository;
 		this.emailService = emailService;
 		this.authService = authService;
@@ -38,16 +37,13 @@ public class StockAlertServiceImpl implements StockAlertService {
 	@Override
 	public void alertStockLow(Product product, int newQuantity) {
 		if (!isStockBelowThreshold(product, newQuantity)) {
-			logger.debug(
-					"Stock level for product '{}' is OK. Quantity: {}, Threshold: {}",
-					product.getName(), newQuantity,
-					product.getLowStockThreshold());
+			logger.debug("Stock level for product '{}' is OK. Quantity: {}, Threshold: {}", product.getName(),
+					newQuantity, product.getLowStockThreshold());
 			return;
 		}
 
-		logger.warn(
-				"Low stock detected for product '{}'. Current quantity: {}, Threshold: {}",
-				product.getName(), newQuantity, product.getLowStockThreshold());
+		logger.warn("Low stock detected for product '{}'. Current quantity: {}, Threshold: {}", product.getName(),
+				newQuantity, product.getLowStockThreshold());
 
 		boolean emailSent = sendLowStockEmail(product, newQuantity);
 		saveStockAlert(product, emailSent);
@@ -60,28 +56,23 @@ public class StockAlertServiceImpl implements StockAlertService {
 	private boolean sendLowStockEmail(Product product, int currentQuantity) {
 		try {
 
-			List<String> recipients = authService
-					.findEmailsByRole(RolesEnum.ROLE_MANAGER);
+			List<String> recipients = authService.findEmailsByRole(RolesEnum.ROLE_MANAGER);
 
-			SendEmailDTO emailDTO = createLowStockEmailDTO(product,
-					currentQuantity, recipients);
+			SendEmailDTO emailDTO = createLowStockEmailDTO(product, currentQuantity, recipients);
 			emailService.sendEmail(emailDTO);
 
-			logger.info(
-					"Low stock email sent successfully for product '{}' to {}",
-					product.getName(), emailDTO.getTo());
+			logger.info("Low stock email sent successfully for product '{}' to {}", product.getName(),
+					emailDTO.getTo());
 			return true;
 
 		} catch (Exception e) {
 
-			logger.warn("Failed to send low stock email for product '{}': {}",
-					product.getName(), e.getMessage());
+			logger.warn("Failed to send low stock email for product '{}': {}", product.getName(), e.getMessage());
 			return false;
 		}
 	}
 
-	private SendEmailDTO createLowStockEmailDTO(Product product,
-			int currentQuantity, List<String> recipients) {
+	private SendEmailDTO createLowStockEmailDTO(Product product, int currentQuantity, List<String> recipients) {
 
 		SendEmailDTO emailDTO = new SendEmailDTO();
 		emailDTO.setTo(recipients);
@@ -97,8 +88,7 @@ public class StockAlertServiceImpl implements StockAlertService {
 		alert.setEmailSent(emailSent);
 
 		stockAlertRepository.save(alert);
-		logger.info("Stock alert saved for product '{}' with emailSent={}",
-				product.getName(), emailSent);
+		logger.info("Stock alert saved for product '{}' with emailSent={}", product.getName(), emailSent);
 	}
 
 	private String createEmailBody(Product product, int currentQuantity) {
@@ -109,7 +99,6 @@ public class StockAlertServiceImpl implements StockAlertService {
 				Threshold: %d
 
 				Please restock as soon as possible.
-				""", product.getName(), currentQuantity,
-				product.getLowStockThreshold());
+				""", product.getName(), currentQuantity, product.getLowStockThreshold());
 	}
 }

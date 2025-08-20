@@ -37,8 +37,7 @@ public class AuthController {
 	private final AuthService authService;
 	private final JwtUtils jwtUtils;
 
-	public AuthController(AuthenticationManager authenticationManager,
-			JwtUtils jwtUtils, UserRepository userRepository,
+	public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserRepository userRepository,
 			AuthService authService) {
 		this.authenticationManager = authenticationManager;
 		this.jwtUtils = jwtUtils;
@@ -48,44 +47,35 @@ public class AuthController {
 
 	@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(
-			@Valid @RequestBody RegisterUserDTO request,
+	public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDTO request,
 			@AuthenticationPrincipal User loggedInUser) {
 		if (userRepository.existsByUsername(request.getUsername())) {
-			throw new UserAlreadyExistsException(
-					"Username already exists: " + request.getUsername());
+			throw new UserAlreadyExistsException("Username already exists: " + request.getUsername());
 		}
 
 		if (userRepository.existsByEmail(request.getEmail())) {
-			throw new UserAlreadyExistsException(
-					"Email already exists: " + request.getEmail());
+			throw new UserAlreadyExistsException("Email already exists: " + request.getEmail());
 		}
 
 		User user = authService.registerNewUser(request, loggedInUser.getId());
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(user.getId()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
+				.toUri();
 
 		return ResponseEntity.created(location).build();
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> authenticateUser(
-			@Valid @RequestBody LoginRequestDTO loginRequest) {
+	public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequest) {
 
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(
-						loginRequest.getUsername(),
-						loginRequest.getPassword()));
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		User user = (User) authentication.getPrincipal();
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
-		List<String> roles = user.getRoles().stream()
-				.map(role -> role.getRole().name())
-				.collect(Collectors.toList());
+		List<String> roles = user.getRoles().stream().map(role -> role.getRole().name()).collect(Collectors.toList());
 
-		JwtResponse jwtResponse = new JwtResponse(jwt, user.getUsername(),
-				roles);
+		JwtResponse jwtResponse = new JwtResponse(jwt, user.getUsername(), roles);
 
 		return ResponseEntity.ok(jwtResponse);
 	}

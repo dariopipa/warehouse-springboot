@@ -29,9 +29,8 @@ public class AuthServiceImpl implements AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuditLogger auditLogger;
 
-	public AuthServiceImpl(UserRepository userRepository,
-			RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+	public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+			PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils,
 			AuditLogger auditLogger) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -41,15 +40,13 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public User registerNewUser(RegisterUserDTO request, Long loggedInUser) {
-		User user = new User(request.getUsername(), request.getEmail(),
-				passwordEncoder.encode(request.getPassword()));
+		User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
 
 		Set<Roles> roles = assignUserRoles(request.getRoles());
 		user.setRoles(roles);
 
 		User savedUser = userRepository.save(user);
-		auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.USER,
-				savedUser.getId());
+		auditLogger.log(loggedInUser, AuditAction.CREATE, EntityType.USER, savedUser.getId());
 		return savedUser;
 	}
 
@@ -63,12 +60,10 @@ public class AuthServiceImpl implements AuthService {
 				try {
 					RolesEnum roleEnum = RolesEnum.valueOf(roleName);
 					Roles role = roleRepository.findByRole(roleEnum)
-							.orElseThrow(() -> new InvalidRoleException(
-									"Role not found: " + roleName));
+							.orElseThrow(() -> new InvalidRoleException("Role not found: " + roleName));
 					roles.add(role);
 				} catch (IllegalArgumentException e) {
-					throw new InvalidRoleException(
-							"Invalid role name: " + roleName);
+					throw new InvalidRoleException("Invalid role name: " + roleName);
 				}
 			}
 		}
@@ -76,12 +71,12 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	private Roles getDefaultRole() {
-		return roleRepository.findByRole(RolesEnum.ROLE_USER).orElseThrow(
-				() -> new InvalidRoleException("Default role not found"));
+		return roleRepository.findByRole(RolesEnum.ROLE_USER)
+				.orElseThrow(() -> new InvalidRoleException("Default role not found"));
 	}
 
 	@Override
 	public List<String> findEmailsByRole(RolesEnum role) {
-	    return userRepository.findEmailsByRole(role);
+		return userRepository.findEmailsByRole(role);
 	}
 }

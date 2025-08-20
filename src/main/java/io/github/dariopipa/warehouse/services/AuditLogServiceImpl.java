@@ -13,15 +13,15 @@ import io.github.dariopipa.warehouse.services.interfaces.AuditLogService;
 public class AuditLogServiceImpl implements AuditLogService {
 
 	private final AuditLogRepository auditLogRepository;
+
 	public AuditLogServiceImpl(AuditLogRepository auditLogRepository) {
 		this.auditLogRepository = auditLogRepository;
 	}
 
 	@Override
 	public void save(AuditLogEvent event) {
-		AuditLog auditLogEntity = new AuditLog(event.getUserId(),
-				event.getAction(), event.getEntityType(), event.getEntityId(),
-				event.getDetails());
+		AuditLog auditLogEntity = new AuditLog(event.getUserId(), event.getAction(), event.getEntityType(),
+				event.getEntityId(), event.getDetails());
 
 		this.auditLogRepository.save(auditLogEntity);
 	}

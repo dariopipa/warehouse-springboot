@@ -1,0 +1,59 @@
+name: Warehouse build
+
+on:
+  push:
+  pull_request: [master]
+
+jobs:
+  build:
+    name: Build With Maven
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: warehouse_pass
+          POSTGRES_USER: warehouse_user
+          POSTGRES_DB: warehouse
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Run unit tests
+        run: mvn clean test
+
+      - name: Run integration tests  
+        run: mvn failsafe:integration-test failsafe:verify
+
+      - name: Build and test Docker deployment
+        run: |
+          mvn package -P docker -DskipTests
+          docker compose up -d
+          sleep 30
+          curl -f http://localhost:6565/api/health
+          curl -f http://localhost:8025 
+          docker compose down
+
+      - name: Generate coverage report
+        run: mvn jacoco:report
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ github.token }}
