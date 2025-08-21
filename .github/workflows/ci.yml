@@ -29,7 +29,12 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build, test & analyze
-        run: -Dsonar.token=${{ secrets.SONAR_TOKEN }} mvn -B -U clean verify sonar:sonar 
+        run: mvn -B -U clean verify
+        
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
 
       - name: Build image with Maven profile
         run: mvn -B -DskipTests -P docker package
