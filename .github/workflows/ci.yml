@@ -31,7 +31,8 @@ jobs:
       - name: Build, test & analyze
         run: mvn -B -U clean verify
         
-      - name: SonarQube Scan
+      - name: SonarCloud scan
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
