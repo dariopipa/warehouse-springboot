@@ -1,57 +1,59 @@
 name: Warehouse build
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+   push:
+      branches:
+      - master
+   pull_request:
 
+      branches:
+      - master
 jobs:
-  build:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+   build:
+      runs-on: ubuntu-latest
+      steps:
 
-      - name: Set up JDK 21 (cache maven)
-        uses: actions/setup-java@v4
-        with:
-          java-version: "21"
-          distribution: "temurin"
-          cache: maven
+      -  name: Checkout
+         uses: actions/checkout@v4
+      -  name: Set up JDK 21 (cache maven)
+         uses: actions/setup-java@v4
+         with:
+            java-version: '21'
 
-      - name: Cache Sonar packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+            distribution: temurin
+            cache: maven
+      -  name: Cache Sonar packages
+         uses: actions/cache@v4
+         with:
+            path: ~/.sonar/cache
 
-      - name: Build, test & analyze
-        run: mvn -B -U clean verify
-        
-      - name: SonarCloud scan
-        if: ${{ secrets.SONAR_TOKEN != '' }}
-        uses: SonarSource/sonarcloud-github-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+            key: ${{ runner.os }}-sonar
+            restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build image with Maven profile
-        run: mvn -B -DskipTests -P docker package
+      -  name: Build, test & analyze
+         run: mvn -B -U clean verify
+      -  name: SonarCloud scan
+         if: ${{ env.SONAR_TOKEN != '' }}
+         uses: SonarSource/sonarcloud-github-action@v2
 
-      - name: Health check
-        run: |
-          docker compose up -d
-          sleep 100
-          curl -f http://localhost:6565/swagger-ui/index.html#/
+         env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Stop compose
-        if: always()
-        run: docker compose down -v
+      -  name: Build image with Maven profile
+         run: mvn -B -DskipTests -P docker package
+      -  name: Health check
+         run: |
+            docker compose up -d
 
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@v2
-        continue-on-error: true
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+            sleep 100
+            curl -f http://localhost:6565/swagger-ui/index.html#/
+      -  name: Stop compose
+
+         if: always()
+         run: docker compose down -v
+      -  name: Upload coverage to Coveralls
+         uses: coverallsapp/github-action@v2
+         continue-on-error: true
+         with: #/
+            github-token: ${{ secrets.GITHUB_TOKEN }}
