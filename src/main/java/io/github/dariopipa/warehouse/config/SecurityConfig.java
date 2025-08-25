@@ -36,7 +36,7 @@ public class SecurityConfig {
 				// Register requires ADMIN or MANAGER roles
 				.requestMatchers("/api/v1/auth/register").hasAnyRole("ADMIN", "MANAGER")
 
-				.requestMatchers("/actuator/**").hasRole("ADMIN")
+				.requestMatchers("/api/health", "/api/metrics").hasRole("ADMIN")
 
 				// All other endpoints require JWT authentication
 				.anyRequest().authenticated())

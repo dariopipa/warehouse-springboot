@@ -2,7 +2,6 @@ package io.github.dariopipa.warehouse.controllers;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
