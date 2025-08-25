@@ -167,8 +167,7 @@ function stressHealthChecks(headers) {
 
 export function handleSummary(data) {
     return {
-        'stress-test-report.html': htmlReport(data, { 
-            title: 'Warehouse Service - STRESS TEST Test Report' 
+            title: 'Warehouse Service - Stress Test Report' 
         }),
         stdout: textSummary(data, { indent: ' ', enableColors: true }),
     };
