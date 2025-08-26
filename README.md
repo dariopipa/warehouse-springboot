@@ -8,3 +8,4 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=dariopipa_warehouse-springboot&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=dariopipa_warehouse-springboot)
 
 
+
