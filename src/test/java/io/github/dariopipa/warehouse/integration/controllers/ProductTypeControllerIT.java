@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -31,7 +32,12 @@ import io.github.dariopipa.warehouse.dtos.responses.JwtResponse;
 import io.github.dariopipa.warehouse.dtos.responses.PaginatedResponse;
 import io.github.dariopipa.warehouse.dtos.responses.ProductTypeResponseDTO;
 import io.github.dariopipa.warehouse.entities.ProductType;
+import io.github.dariopipa.warehouse.entities.Roles;
+import io.github.dariopipa.warehouse.entities.User;
+import io.github.dariopipa.warehouse.enums.RolesEnum;
 import io.github.dariopipa.warehouse.repositories.ProductTypeRepository;
+import io.github.dariopipa.warehouse.repositories.RoleRepository;
+import io.github.dariopipa.warehouse.repositories.UserRepository;
 import io.github.dariopipa.warehouse.services.interfaces.ProductTypeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -55,18 +61,33 @@ class ProductTypeControllerIT {
 	@Autowired
 	private ProductTypeService productTypeService;
 
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	private String jwtToken;
-	private Long testUserId = 1L;
+	private Long testUserId;
 
 	@BeforeEach
 	void setUp() {
 		productTypeRepository.deleteAll();
+		userRepository.deleteAll();
+		roleRepository.deleteAll();
+
+		createTestUsersAndRoles();
 		jwtToken = authenticateAndGetToken();
 	}
 
 	@AfterEach
 	void tearDown() {
 		productTypeRepository.deleteAll();
+		userRepository.deleteAll();
+		roleRepository.deleteAll();
 	}
 
 	@Test
@@ -228,5 +249,21 @@ class ProductTypeControllerIT {
 		ProductTypesDTO productTypeDTO = new ProductTypesDTO();
 		productTypeDTO.setName(name);
 		return productTypeService.save(productTypeDTO, testUserId);
+	}
+
+	private void createTestUsersAndRoles() {
+		// Create admin role
+		Roles adminRole = new Roles();
+		adminRole.setRole(RolesEnum.ROLE_ADMIN);
+		adminRole = roleRepository.save(adminRole);
+
+		// Create admin user
+		User adminUser = new User();
+		adminUser.setUsername("admin");
+		adminUser.setPassword(passwordEncoder.encode("admin123"));
+		adminUser.setEmail("admin@test.com");
+		adminUser.setRoles(java.util.Set.of(adminRole));
+		adminUser = userRepository.save(adminUser);
+		testUserId = adminUser.getId();
 	}
 }
