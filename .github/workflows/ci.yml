@@ -2,24 +2,20 @@ name: Warehouse build
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Set up JDK 21 (cache maven)
         uses: actions/setup-java@v4
@@ -28,6 +24,9 @@ jobs:
           distribution: temurin
           cache: maven
 
+      - name: Ensure Sonar cache dir exists
+        run: mkdir -p ~/.sonar/cache
+
       - name: Cache Sonar packages
         uses: actions/cache@v4
         with:
@@ -35,11 +34,10 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build, test & analyze
-        run: mvn -B -U clean verify
+      - name: Build, test
+        run: mvn -B -U -ntp clean verify
 
-      - name: SonarCloud scan
-        if: ${{ secrets.SONAR_TOKEN != '' }}
+      - name: SonarCloud analysis (Maven plugin)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
