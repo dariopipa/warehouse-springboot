@@ -8,11 +8,13 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write   # needed for PR decoration
+  pull-requests: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -41,10 +43,14 @@ jobs:
       - name: Build (unit + IT)
         run: mvn -B -V -ntp clean verify
 
-      # Sonar on pushes OR same-repo PRs, and only if the secret exists
+      # Run Sonar on pushes OR same-repo PRs
       - name: SonarCloud analysis
-        if: ${{ (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && secrets.SONAR_TOKEN != '' }}
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # for PR decoration
-          SONAR_TOKEN:  ${{ secrets.SONAR_TOKEN }}    # SonarCloud user token
-        run: mvn -B -ntp sonar:sonar
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # for PR decoration
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "SONAR_TOKEN not set; skipping Sonar."
+            exit 0
+          fi
+          mvn -B -ntp sonar:sonar
