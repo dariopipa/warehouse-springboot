@@ -30,7 +30,10 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dariopipa_warehouse-springboot
+      - name: Build and analyze (⚠️ hard-coded token, not safe)
+        run: |
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=dariopipa_warehouse-springboot \
+            -Dsonar.organization=dariopipa \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=6990c57dd9d61dff68003580cd63178fceb45592E
