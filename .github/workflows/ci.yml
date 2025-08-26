@@ -16,13 +16,14 @@ jobs:
 
       -  name: Checkout
          uses: actions/checkout@v4
+         
       -  name: Set up JDK 21 (cache maven)
          uses: actions/setup-java@v4
          with:
             java-version: '21'
-
             distribution: temurin
             cache: maven
+            
       -  name: Cache Sonar packages
          uses: actions/cache@v4
          with:
@@ -33,27 +34,31 @@ jobs:
 
       -  name: Build, test & analyze
          run: mvn -B -U clean verify
+         
       -  name: SonarCloud scan
          if: ${{ env.SONAR_TOKEN != '' }}
          uses: SonarSource/sonarcloud-github-action@v2
-
          env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         run: mvn -B -ntp sonar:sonar  
+        
       -  name: Build image with Maven profile
          run: mvn -B -DskipTests -P docker package
+         
       -  name: Health check
          run: |
             docker compose up -d
 
             sleep 100
             curl -f http://localhost:6565/swagger-ui/index.html#/
+            
       -  name: Stop compose
-
          if: always()
          run: docker compose down -v
+         
       -  name: Upload coverage to Coveralls
          uses: coverallsapp/github-action@v2
          continue-on-error: true
-         with: #/
+         with:
             github-token: ${{ secrets.GITHUB_TOKEN }}
