@@ -69,7 +69,7 @@ Once the application is running, you can access:
 
 - **MailHog Web UI**: [http://localhost:8025](http://localhost:8025)
   - View all emails sent by the application
-  - Test email notifications and user registration confirmations
+  - Test email notifications
 
 ### Health Monitoring (Only if logged in as admin)
 
