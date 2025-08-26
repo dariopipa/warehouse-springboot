@@ -6,3 +6,5 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=dariopipa_warehouse-springboot&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=dariopipa_warehouse-springboot)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dariopipa_warehouse-springboot&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=dariopipa_warehouse-springboot)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=dariopipa_warehouse-springboot&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=dariopipa_warehouse-springboot)
+
+
